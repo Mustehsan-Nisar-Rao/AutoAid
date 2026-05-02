@@ -484,3 +484,66 @@ class TestFeatureVectorToArray:
         arr = feature_vector_to_array(features)
         for i, name in enumerate(FEATURE_NAMES):
             assert arr[i] == pytest.approx(float(i))
+# ══════════════════════════════════════════════════════════════════════════════
+# 12. TASK 3 MUTANT KILLER TESTS (M1, M2, M3, M4)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestMutantKillers:
+    """New tests designed to kill survived mutants identified in Task 3."""
+
+    # ========== M1: LCR Mutant (and → or) in get_driver_tier() ==========
+    def test_m1_lcr_mutant_killer_jobs_zero_ratings_positive(self):
+        """
+        Kills LCR mutant: if jobs == 0 and ratings == 0 → or
+        Input: jobs=0, ratings=5
+        Original (and): False → 'emerging'
+        Mutant (or): True → 'new'
+        """
+        driver = {'completed_jobs': 0, 'rating_count': 5}
+        result = get_driver_tier(driver)
+        assert result == 'emerging'
+
+    def test_m1_lcr_mutant_killer_jobs_positive_ratings_zero(self):
+        """
+        Kills LCR mutant: symmetry test
+        Input: jobs=3, ratings=0
+        Original (and): False → 'emerging'
+        Mutant (or): True → 'new'
+        """
+        driver = {'completed_jobs': 3, 'rating_count': 0}
+        result = get_driver_tier(driver)
+        assert result == 'emerging'
+
+    # ========== M2: CRP Mutant (global_mean 4.0 → 5.0) in bayesian_rating() ==========
+    def test_m2_bayesian_rating_global_mean_fix(self):
+        """
+        Kills CRP mutant: global_mean default 4.0 changed to 5.0
+        Tests WITHOUT passing explicit global_mean (uses default)
+        With rating_count=2 (less than min_ratings), global_mean affects calculation
+        Original default is 4.0 → expected = 4.0
+        Mutant default is 5.0 → would give 4.83
+        """
+        result = bayesian_rating(avg_rating=4.0, rating_count=2)
+        assert result == pytest.approx(4.0, abs=0.001)
+
+    # ========== M3: CRP Mutant (decay_rate 0.3 → 1.3) in distance_score() ==========
+    def test_m3_distance_score_default_decay_rate(self):
+        """
+        Kills CRP mutant: decay_rate default 0.3 changed to 1.3
+        Tests default behavior WITHOUT passing explicit decay_rate
+        At d_km=3: exp(-0.3*3) = 0.40657
+        """
+        result = distance_score(3)
+        expected = np.exp(-0.3 * 3)
+        assert result == pytest.approx(expected, abs=0.001)
+
+    # ========== M4: BCR Mutant (accepted_jobs == 0 → 1) in cancel_score() ==========
+    def test_m4_cancel_score_boundary_one_job(self):
+        """
+        Kills BCR mutant: if accepted_jobs == 0 → if accepted_jobs == 1
+        Input: accepted_jobs=1, cancellations=1
+        Original (0): False → calculate: 1.0 - (1/1) = 0.0
+        Mutant (1): True → return 1.0
+        """
+        result = cancel_score(cancellations=1, accepted_jobs=1)
+        assert result == pytest.approx(0.0)
