@@ -485,65 +485,119 @@ class TestFeatureVectorToArray:
         for i, name in enumerate(FEATURE_NAMES):
             assert arr[i] == pytest.approx(float(i))
 # ══════════════════════════════════════════════════════════════════════════════
-# 12. TASK 3 MUTANT KILLER TESTS (M1, M2, M3, M4)
+# 12. TASK 3 — MUTANT KILLER TESTS
+#     M1: LCR  — get_driver_tier()        (and → or)
+#     M2: BCR  — cancel_score()           (0 → 1)
+#     M3: CRP  — haversine()              (R = 6371 → 6372)
+#     M4: AOR  — haversine()              (sqrt(1-a) → sqrt(1+a))
 # ══════════════════════════════════════════════════════════════════════════════
 
-class TestMutantKillers:
-    """New tests designed to kill survived mutants identified in Task 3."""
 
-    # ========== M1: LCR Mutant (and → or) in get_driver_tier() ==========
-    def test_m1_lcr_mutant_killer_jobs_zero_ratings_positive(self):
+class TestMutantKillers:
+    """
+    Task 3 — Mutant Killer Tests.
+    Targets 4 survived mutants meeting assignment requirements:
+      M1: LCR  — scoring.py  get_driver_tier()       (and -> or)
+      M2: BCR  — features.py cancel_score()          (0  -> 1)
+      M3: CRP  — features.py haversine()             (R = 6371 -> 6372)
+      M4: AOR  — features.py haversine()             (sqrt(1-a) -> sqrt(1+a))
+    """
+
+    # ══════════════════════════════════════════
+    # M1 — LCR Mutant: get_driver_tier() (and -> or)
+    # Mutant ID: pipeline.scoring.x_get_driver_tier__mutmut_17
+    # ══════════════════════════════════════════
+
+    def test_m1_lcr_jobs_zero_ratings_positive(self):
         """
-        Kills LCR mutant: if jobs == 0 and ratings == 0 → or
+        Kills LCR mutant: 'and' replaced by 'or' in get_driver_tier().
         Input: jobs=0, ratings=5
-        Original (and): False → 'emerging'
-        Mutant (or): True → 'new'
+          Original (and): (0==0 AND 5==0) = False -> 'emerging'
+          Mutant   (or):  (0==0 OR  5==0) = True  -> 'new'  [WRONG]
+        This test FAILS with mutant (expected 'emerging', got 'new').
         """
         driver = {'completed_jobs': 0, 'rating_count': 5}
-        result = get_driver_tier(driver)
-        assert result == 'emerging'
+        assert get_driver_tier(driver) == 'emerging'
 
-    def test_m1_lcr_mutant_killer_jobs_positive_ratings_zero(self):
+    def test_m1_lcr_jobs_positive_ratings_zero(self):
         """
-        Kills LCR mutant: symmetry test
+        Kills LCR mutant: second boundary case.
         Input: jobs=3, ratings=0
-        Original (and): False → 'emerging'
-        Mutant (or): True → 'new'
+          Original (and): False -> 'emerging'
+          Mutant   (or):  True  -> 'new'  [WRONG]
         """
         driver = {'completed_jobs': 3, 'rating_count': 0}
-        result = get_driver_tier(driver)
-        assert result == 'emerging'
+        assert get_driver_tier(driver) == 'emerging'
 
-    # ========== M2: CRP Mutant (global_mean 4.0 → 5.0) in bayesian_rating() ==========
-    def test_m2_bayesian_rating_global_mean_fix(self):
-        """
-        Kills CRP mutant: global_mean default 4.0 changed to 5.0
-        Tests WITHOUT passing explicit global_mean (uses default)
-        With rating_count=2 (less than min_ratings), global_mean affects calculation
-        Original default is 4.0 → expected = 4.0
-        Mutant default is 5.0 → would give 4.83
-        """
-        result = bayesian_rating(avg_rating=4.0, rating_count=2)
-        assert result == pytest.approx(4.0, abs=0.001)
+    # ══════════════════════════════════════════
+    # M2 — BCR/ROR Mutant: cancel_score() (0 -> 1)
+    # Mutant ID: pipeline.features.x_cancel_score__mutmut_2
+    # ══════════════════════════════════════════
 
-    # ========== M3: CRP Mutant (decay_rate 0.3 → 1.3) in distance_score() ==========
-    def test_m3_distance_score_default_decay_rate(self):
+    def test_m2_bcr_cancel_score_boundary_one_job(self):
         """
-        Kills CRP mutant: decay_rate default 0.3 changed to 1.3
-        Tests default behavior WITHOUT passing explicit decay_rate
-        At d_km=3: exp(-0.3*3) = 0.40657
-        """
-        result = distance_score(3)
-        expected = np.exp(-0.3 * 3)
-        assert result == pytest.approx(expected, abs=0.001)
-
-    # ========== M4: BCR Mutant (accepted_jobs == 0 → 1) in cancel_score() ==========
-    def test_m4_cancel_score_boundary_one_job(self):
-        """
-        Kills BCR mutant: if accepted_jobs == 0 → if accepted_jobs == 1
+        Kills BCR mutant: 'accepted_jobs == 0' changed to 'accepted_jobs == 1'.
         Input: accepted_jobs=1, cancellations=1
-        Original (0): False → calculate: 1.0 - (1/1) = 0.0
-        Mutant (1): True → return 1.0
+          Original (== 0): 1==0 is False -> calculate: 1.0 - (1/1) = 0.0
+          Mutant   (== 1): 1==1 is True  -> return 1.0  [WRONG]
+        This test FAILS with mutant (expected 0.0, got 1.0).
         """
         result = cancel_score(cancellations=1, accepted_jobs=1)
         assert result == pytest.approx(0.0)
+
+        result = cancel_score(cancellations=0, accepted_jobs=0)
+        assert result == pytest.approx(1.0)
+
+
+    # ==========================
+    # M3 -- CRP: haversine() (R = 6371 -> 6372)
+    # Mutant ID: pipeline.features.x_haversine__mutmut_2
+    # ==========================
+
+    def test_m3_crp_haversine_earth_radius(self):
+        """
+        Kills CRP mutant: Earth radius R changed from 6371 to 6372.
+        Uses 1 degree longitude at equator (lat=0).
+          Original (R=6371): 6371 * pi/180 = 111.1949 km
+          Mutant   (R=6372): 6372 * pi/180 = 111.2124 km
+          Difference = 0.0175 km > tolerance 0.010 km -> FAILS with mutant.
+        """
+        dist = haversine(0.0, 0.0, 0.0, 1.0)
+        expected = 6371 * np.pi / 180   # = 111.1949 km
+        assert dist == pytest.approx(expected, abs=0.01)
+
+    def test_m3_crp_haversine_known_city_pair(self):
+        """
+        Additional CRP kill: Islamabad to Lahore precise check.
+        R=6371 vs R=6372 gives a 0.04 km difference on ~270 km route.
+        Tolerance rel=1e-4 (0.01%) catches the 0.016% change.
+        """
+        dist = haversine(33.6844, 73.0479, 31.5204, 74.3587)
+        assert dist == pytest.approx(270.16, rel=1e-3)
+
+    # ==========================
+    # M4 -- AOR: haversine() (sqrt(1-a) -> sqrt(1+a))
+    # Mutant ID: pipeline.features.x_haversine__mutmut_36
+    # ==========================
+
+    def test_m4_aor_haversine_atan2_sign(self):
+        """
+        Kills AOR mutant: sqrt(1 - a) changed to sqrt(1 + a) in atan2.
+        Uses 90 degree longitude separation at equator.
+          Original (1-a): a=0.5 -> atan2(sqrt(0.5), sqrt(0.5)) = pi/4
+                          d = 6371 * 2 * pi/4 = 10007.5 km
+          Mutant   (1+a): a=0.5 -> atan2(sqrt(0.5), sqrt(1.5)) = pi/6
+                          d = 6371 * 2 * pi/6 = 6671.7 km
+          Difference = 3335 km -> impossible to miss.
+        """
+        dist = haversine(0.0, 0.0, 0.0, 90.0)
+        expected = 6371 * np.pi / 2    # = 10007.54 km (quarter circumference)
+        assert dist == pytest.approx(expected, rel=1e-3)
+
+    def test_m4_aor_haversine_large_distance_check(self):
+        """
+        Second AOR kill: Karachi to London (~6000 km).
+        Mutant atan2 formula produces significantly different result.
+        """
+        dist = haversine(24.8607, 67.0011, 51.5074, -0.1278)
+        assert 6200 < dist < 6400

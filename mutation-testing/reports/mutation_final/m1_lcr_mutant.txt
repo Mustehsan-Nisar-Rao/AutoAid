@@ -1,0 +1,12 @@
+# pipeline.scoring.x_get_driver_tier__mutmut_17: killed
+--- pipeline/scoring.py
++++ pipeline/scoring.py
+@@ -14,7 +14,7 @@
+     jobs = driver.get('completed_jobs', 0)
+     ratings = driver.get('rating_count', 0)
+     
+-    if jobs == 0 and ratings == 0:
++    if jobs == 0 or ratings == 0:
+         return 'new'
+     elif jobs < 5 or ratings < 3:
+         return 'emerging'
