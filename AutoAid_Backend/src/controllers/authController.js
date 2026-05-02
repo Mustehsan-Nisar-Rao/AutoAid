@@ -173,12 +173,6 @@ exports.login = async (req, res) => {
             return res.status(403).json({ error: 'Account suspended. Please contact support.' });
         }
 
-        // Removed pending check to allow redirection to PendingApproval page on frontend
-        // if (user.role === 'provider' && user.status === 'pending') {
-        //     return res.status(403).json({ error: 'Account pending approval. Please wait for admin verification.' });
-        // }
-
-        // 4. Return User Details
         // 4. Generate JWT
         const jwtToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: '30d'
@@ -206,7 +200,6 @@ exports.login = async (req, res) => {
                     providerDetails: user.providerDetails
                 }
             });
-
     } catch (error) {
         console.error('Login Error:', error);
         res.status(401).json({ error: 'Invalid or expired token' });

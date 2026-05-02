@@ -50,7 +50,7 @@ const Login = () => {
             const user = userCredential.user;
             
             // 2. Get ID Token
-            const token = await user.getIdToken();
+            const token = await user.getIdToken(true);
 
             // 3. Verify with Backend
             const response = await fetch('http://localhost:3000/api/auth/login', {
