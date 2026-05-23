@@ -480,6 +480,12 @@ const NearbyProviders = () => {
             // Tag marker for real-time tracking updates via socket
             marker._providerId = provider.id;
 
+            const fuelPrice = (fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0;
+            const fuelCost = fuelPrice * parseFloat(quantity || 0);
+            const distanceInKm = parseFloat(provider.distance) || 0;
+            const deliveryCharges = distanceInKm * 50; // Rs. 50 per km
+            const totalCost = fuelCost + deliveryCharges;
+
             const infoContent = `
                 <div style="padding: 8px; min-width: 180px; font-family: 'Inter', sans-serif;">
                     <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: #1a1a2e;">${provider.name}</h3>
@@ -492,10 +498,10 @@ const NearbyProviders = () => {
                     ${serviceType === 'Fuel Delivery' && fuelType && quantity ? `
                         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
                             <p style="margin: 0; font-size: 13px; font-weight: 700; color: #00BCD4;">
-                                Cost: Rs. ${((fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0) * parseFloat(quantity)}
+                                Total: Rs. ${Math.round(totalCost)}
                             </p>
-                            <p style="margin: 2px 0 0 0; font-size: 10px; color: #666;">@ Rs. ${(fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0} / L</p>
-                            <p style="margin: 0; font-size: 10px; color: #888;">+ Delivery charges</p>
+                            <p style="margin: 2px 0 0 0; font-size: 10px; color: #666;">Fuel: Rs. ${Math.round(fuelCost)} (@ Rs. ${fuelPrice}/L)</p>
+                            <p style="margin: 0; font-size: 10px; color: #888;">Delivery: Rs. ${Math.round(deliveryCharges)} (${distanceInKm} km @ Rs. 50/km)</p>
                         </div>
                     ` : ''}
                     <button id="iw-request-btn-${provider.id}" style="margin-top: 12px; width: 100%; padding: 6px 12px; background-color: #00BCD4; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
@@ -620,12 +626,24 @@ const NearbyProviders = () => {
                                         <p className="text-gray-500 dark:text-text-muted text-xs">{provider.service}</p>
                                         
                                         {serviceType === 'Fuel Delivery' && fuelType && quantity && (
-                                            <div className="mt-2 text-primary font-bold text-sm">
-                                                <div>Rs. {((fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0) * parseFloat(quantity)}</div>
-                                                <div className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
-                                                    @ Rs. {(fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0} / L + Delivery charges
-                                                </div>
-                                            </div>
+                                            (() => {
+                                                const fuelPrice = (fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0;
+                                                const fuelCost = fuelPrice * parseFloat(quantity || 0);
+                                                const distanceInKm = parseFloat(provider.distance) || 0;
+                                                const deliveryCharges = distanceInKm * 50;
+                                                const totalCost = fuelCost + deliveryCharges;
+                                                return (
+                                                    <div className="mt-2 text-primary font-bold text-sm">
+                                                        <div>Total: Rs. {Math.round(totalCost)}</div>
+                                                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
+                                                            Fuel: Rs. {Math.round(fuelCost)} (@ Rs. {fuelPrice}/L)
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
+                                                            Delivery: Rs. {Math.round(deliveryCharges)} ({distanceInKm} km @ Rs. 50/km)
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()
                                         )}
                                     </div>
                                     
@@ -790,6 +808,7 @@ const NearbyProviders = () => {
                                                      <option>Misbehavior</option>
                                                      <option>Fake service</option>
                                                      <option>Safety issue</option>
+                                                     <option>Other</option>
                                                  </select>
                                              </div>
 
