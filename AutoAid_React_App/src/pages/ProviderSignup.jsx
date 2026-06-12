@@ -292,7 +292,6 @@ const ProviderSignup = () => {
 
                                         {/* Conditional Fields */}
                                         {serviceType === 'temporary-driver' && (
-                                            <>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 dark:text-subtle-dark">Driving License Picture</label>
                                                 <div className="mt-1 flex items-center justify-between p-2 border border-gray-300 dark:border-border-dark rounded-md bg-white dark:bg-gray-700">
@@ -303,6 +302,9 @@ const ProviderSignup = () => {
                                                     </label>
                                                 </div>
                                             </div>
+                                        )}
+
+                                        {['temporary-driver', 'breakdown-assistance', 'towing-service', 'lockout-assistance'].includes(serviceType) && (
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 dark:text-subtle-dark" htmlFor="chargesPerHour">
                                                     Charges Per Hour (PKR)
@@ -327,7 +329,6 @@ const ProviderSignup = () => {
                                                     )}
                                                 </div>
                                             </div>
-                                            </>
                                         )}
 
                                         {serviceType === 'fuel-provider' && (
