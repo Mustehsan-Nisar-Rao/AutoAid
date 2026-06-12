@@ -258,7 +258,7 @@ const UserProfile = () => {
                                                     className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-border-dark rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary outline-none transition-all"
                                                 />
                                             </div>
-                                            {userProfile.providerDetails?.serviceType?.includes('driver') && (
+                                            {['driver', 'breakdown', 'towing', 'lockout'].some(type => userProfile.providerDetails?.serviceType?.toLowerCase().includes(type)) && (
                                                 <div className="space-y-2">
                                                     <label className="text-sm font-medium text-text-muted">Charges Per Hour (PKR 200-1000)</label>
                                                     <input 

@@ -40,8 +40,8 @@ exports.signup = async (req, res) => {
                 model: req.body.towingModel
             }
         };
-        // Save charges per hour for temporary drivers
-        if (req.body.serviceType === 'temporary-driver' && req.body.chargesPerHour) {
+        // Save charges per hour for temporary drivers, breakdown, towing, lockout
+        if (['temporary-driver', 'breakdown-assistance', 'towing-service', 'lockout-assistance'].includes(req.body.serviceType) && req.body.chargesPerHour) {
             const cph = parseInt(req.body.chargesPerHour, 10);
             if (cph >= 200 && cph <= 1000) {
                 providerDetails.chargesPerHour = cph;

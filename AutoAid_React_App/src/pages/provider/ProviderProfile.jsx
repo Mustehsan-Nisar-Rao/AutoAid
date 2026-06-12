@@ -296,7 +296,7 @@ const ProviderProfile = () => {
                                     )}
                                 </div>
 
-                                {currentUser.providerDetails?.serviceType?.includes('driver') && (
+                                {['driver', 'breakdown', 'towing', 'lockout'].some(type => currentUser.providerDetails?.serviceType?.toLowerCase().includes(type)) && (
                                     <div className="space-y-3">
                                         <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Hourly Charges (PKR)</label>
                                         {isEditing ? (
