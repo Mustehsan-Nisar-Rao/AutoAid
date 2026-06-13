@@ -441,7 +441,8 @@ exports.getNearbyProviders = async (req, res) => {
                     lng: provider.currentLocation.lng,
                     contactNumber: provider.contactNumber,
                     petrolPrice: provider.providerDetails?.petrolPrice,
-                    dieselPrice: provider.providerDetails?.dieselPrice
+                    dieselPrice: provider.providerDetails?.dieselPrice,
+                    chargesPerHour: provider.providerDetails?.chargesPerHour
                 };
             }
             return null;
