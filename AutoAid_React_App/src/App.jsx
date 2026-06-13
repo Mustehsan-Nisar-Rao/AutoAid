@@ -45,6 +45,7 @@ import TemporaryDriver from './pages/TemporaryDriver';
 import RoutePlanning from './pages/RoutePlanning';
 import NearbyProviders from './pages/NearbyProviders';
 import HireDriver from './pages/HireDriver';
+import ReceiptPage from './pages/ReceiptPage';
 
 // Provider Pages
 import ProviderLayout from './components/ProviderLayout';
@@ -90,6 +91,7 @@ function App() {
                 <Route path="nearby-providers" element={<NearbyProviders />} />
                 <Route path="hire-driver" element={<HireDriver />} />
                 <Route path="profile" element={<UserProfile />} />
+                <Route path="receipt/:id" element={<ReceiptPage />} />
               </Route>
 
               {/* Admin Layout Routes */}

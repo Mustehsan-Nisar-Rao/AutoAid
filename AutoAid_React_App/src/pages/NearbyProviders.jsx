@@ -5,6 +5,7 @@ import { MdMyLocation } from 'react-icons/md';
 import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import PaymentModal from '../components/PaymentModal';
 
 const NearbyProviders = () => {
     const location = useLocation();
@@ -43,6 +44,9 @@ const NearbyProviders = () => {
     const [disputeFile, setDisputeFile] = useState(null);
     const [ratingSubmitting, setRatingSubmitting] = useState(false);
     const [ratingDone, setRatingDone] = useState(false);
+
+    // Payment modal state
+    const [paymentModal, setPaymentModal] = useState(null); // { requestId, providerName, serviceType, amount }
     
     // Timeout/Countdown state
     const [requestCountdown, setRequestCountdown] = useState(0);
@@ -57,6 +61,8 @@ const NearbyProviders = () => {
     const [newMessage, setNewMessage] = useState('');
     const chatEndRef = useRef(null);
     const activeJobRef = useRef(null);
+    // Stores the last requested provider so we can access chargesPerHour on job_completed
+    const providerDataRef = useRef(null);
 
     // Fetch Active Job on mount (restores chat if page refreshed)
     useEffect(() => {
@@ -217,7 +223,6 @@ const NearbyProviders = () => {
         // Listen for job completion to show rating popup
         socket.on('job_completed', (data) => {
             console.log("JOB COMPLETED EVENT RECEIVED:", data);
-            // window.alert("Job Completed! Opening rating popup..."); // Optional: extreme debug
             setRatingPopup({
                 requestId: data.requestId,
                 providerName: data.providerName,
@@ -231,8 +236,32 @@ const NearbyProviders = () => {
 
             if (activeJob && activeJob._id === data.requestId) {
                 setActiveJob(prev => ({ ...prev, status: 'Completed' }));
-                setIsChatOpen(false); // Optionally close array or show read-only
+                setIsChatOpen(false);
             }
+
+            // Trigger payment modal: calculate amount based on service type and provider rate
+            const calcAmount = () => {
+                const pData = providerDataRef.current;
+                if (serviceType === 'Fuel Delivery' && fuelType && quantity && pData) {
+                    const fuelPrice = (fuelType === 'Petrol' ? pData.petrolPrice : pData.dieselPrice) || 200;
+                    const fuelCost = fuelPrice * parseFloat(quantity || 0);
+                    const distanceMiles = parseFloat(pData.distance) || 0;
+                    const distanceKm = distanceMiles / 0.621371;
+                    const deliveryCharges = distanceKm * 50;
+                    return Math.round(fuelCost + deliveryCharges);
+                }
+                // For hourly services (Towing, Breakdown, Lockout)
+                if (pData?.chargesPerHour) {
+                    return pData.chargesPerHour; // show one-hour base charge; user can pay extra hours
+                }
+                return 500; // fallback base charge
+            };
+            setPaymentModal({
+                requestId: data.requestId,
+                providerName: data.providerName,
+                serviceType: data.serviceType,
+                amount: calcAmount()
+            });
         });
 
         socket.on('disconnect', (reason) => {
@@ -430,6 +459,8 @@ const NearbyProviders = () => {
                 setIsWaitingForProvider(true);
                 setRequestCountdown(60);
                 setActiveRequestProvider(provider);
+                // Save provider details (chargesPerHour etc.) for payment calculation
+                providerDataRef.current = provider;
                 // alert(`Request sent to ${provider.name}!\nProvider has been notified.`);
             } else {
                 error(`Error: ${data.error || 'Failed to send request'}`);
@@ -502,6 +533,13 @@ const NearbyProviders = () => {
                             </p>
                             <p style="margin: 2px 0 0 0; font-size: 10px; color: #666;">Fuel: Rs. ${Math.round(fuelCost)} (@ Rs. ${fuelPrice}/L)</p>
                             <p style="margin: 0; font-size: 10px; color: #888;">Delivery: Rs. ${Math.round(deliveryCharges)} (${distanceInKm} km @ Rs. 50/km)</p>
+                        </div>
+                    ` : ''}
+                    ${['Towing Service', 'Breakdown Repair', 'Lockout Service'].includes(serviceType) && provider.chargesPerHour ? `
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
+                            <p style="margin: 0; font-size: 13px; font-weight: 700; color: #00BCD4;">
+                                Charges: PKR ${provider.chargesPerHour}/hr
+                            </p>
                         </div>
                     ` : ''}
                     <button id="iw-request-btn-${provider.id}" style="margin-top: 12px; width: 100%; padding: 6px 12px; background-color: #00BCD4; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
@@ -645,6 +683,12 @@ const NearbyProviders = () => {
                                                 );
                                             })()
                                         )}
+
+                                        {['Towing Service', 'Breakdown Repair', 'Lockout Service'].includes(serviceType) && provider.chargesPerHour && (
+                                            <div className="mt-2 text-primary font-bold text-sm">
+                                                Charges: PKR {provider.chargesPerHour}/hr
+                                            </div>
+                                        )}
                                     </div>
                                     
                                     <button 
@@ -718,6 +762,14 @@ const NearbyProviders = () => {
                             >
                                 Back to Home
                             </button>
+                            {paymentModal && (
+                                <button
+                                    onClick={() => setPaymentModal(p => ({ ...p, _open: true }))}
+                                    className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold hover:opacity-90 transition-all shadow-lg"
+                                >
+                                    💳 Pay Now
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <>
@@ -1057,6 +1109,18 @@ const NearbyProviders = () => {
                     </div>
                 </div>
             </div>
+        )}
+        {/* ─── Payment Modal ─── */}
+        {paymentModal && (
+            <PaymentModal
+                isOpen={true}
+                onClose={() => setPaymentModal(null)}
+                serviceRequestId={paymentModal.requestId}
+                serviceType={paymentModal.serviceType}
+                providerName={paymentModal.providerName}
+                amount={paymentModal.amount}
+                currentUser={currentUser}
+            />
         )}
         </>
     );

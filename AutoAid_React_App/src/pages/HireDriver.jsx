@@ -9,6 +9,7 @@ import { MdMyLocation } from 'react-icons/md';
 import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import PaymentModal from '../components/PaymentModal';
 
 // React-Leaflet imports
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
@@ -164,6 +165,9 @@ const HireDriver = () => {
     const [disputeFile, setDisputeFile] = useState(null);
     const [ratingSubmitting, setRatingSubmitting] = useState(false);
     const [ratingDone, setRatingDone] = useState(false);
+
+    // Payment modal state
+    const [paymentModal, setPaymentModal] = useState(null); // { requestId, providerName, serviceType, amount }
     
     // Timeout/Countdown state
     const [requestCountdown, setRequestCountdown] = useState(0);
@@ -185,6 +189,8 @@ const HireDriver = () => {
     const [newMessage, setNewMessage] = useState('');
     const chatEndRef = useRef(null);
     const activeJobRef = useRef(null);
+    // Stores the hired driver's data so we can use charges_per_hour on job_completed
+    const providerDataRef = useRef(null);
 
     // Fetch Active Job on mount (restores chat if page refreshed)
     useEffect(() => {
@@ -270,7 +276,6 @@ const HireDriver = () => {
             }
         });
 
-        // Job completed → show rating popup
         socket.on('job_completed', (data) => {
             setRatingPopup({
                 requestId: data.requestId,
@@ -287,6 +292,18 @@ const HireDriver = () => {
                 setActiveJob(prev => ({ ...prev, status: 'Completed' }));
                 setIsChatOpen(false);
             }
+
+            // Calculate amount: use stored provider rate × hours, or fallback to 500/hr
+            const ratePerHour = providerDataRef.current?.charges_per_hour || 500;
+            const estimatedAmount = hours > 0
+                ? Math.round(ratePerHour * hours)
+                : ratePerHour; // if no duration, show 1-hour charge
+            setPaymentModal({
+                requestId: data.requestId,
+                providerName: data.providerName,
+                serviceType: data.serviceType,
+                amount: estimatedAmount
+            });
         });
 
         // Listen for job acceptance to clear timer
@@ -545,6 +562,8 @@ const HireDriver = () => {
             setIsWaitingForProvider(true);
             setRequestCountdown(60);
             setActiveRequestProvider(provider);
+            // Save provider details for payment amount calculation
+            providerDataRef.current = provider;
 
         } catch (err) {
             console.error('Hire process error:', err);
@@ -1353,6 +1372,20 @@ const HireDriver = () => {
                             >
                                 Back to Home
                             </button>
+                            {paymentModal && (
+                                <button
+                                    onClick={() => setPaymentModal(p => ({ ...p, _open: true }))}
+                                    style={{
+                                        padding: '12px 32px',
+                                        background: 'linear-gradient(135deg, #10b981, #059669)',
+                                        border: 'none', borderRadius: '12px', color: 'white',
+                                        fontWeight: 700, cursor: 'pointer', fontSize: '15px',
+                                        marginTop: '8px'
+                                    }}
+                                >
+                                    💳 Pay Now
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <>
@@ -1693,6 +1726,18 @@ const HireDriver = () => {
                     </div>
                 </div>
             </div>
+        )}
+        {/* ─── Payment Modal ─── */}
+        {paymentModal && (
+            <PaymentModal
+                isOpen={true}
+                onClose={() => setPaymentModal(null)}
+                serviceRequestId={paymentModal.requestId}
+                serviceType={paymentModal.serviceType}
+                providerName={paymentModal.providerName}
+                amount={paymentModal.amount}
+                currentUser={currentUser}
+            />
         )}
         </>
 
