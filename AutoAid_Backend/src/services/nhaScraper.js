@@ -65,6 +65,8 @@ const runScraper = () => {
                     return reject(new Error(parsedData.error || 'Scraper reported failure'));
                 }
 
+                console.log("Raw Scraped NHA Data:", parsedData.data);
+
                 // Process and enrich data
                 const enrichedData = parsedData.data.map(item => {
                     const cardLines = item.fullText.split('\n').map(l => l.trim()).filter(Boolean);

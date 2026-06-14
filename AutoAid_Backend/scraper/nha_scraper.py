@@ -23,10 +23,10 @@ def scrape_travel_advisory():
         # Open the website
         driver.get("http://cpo.nhmp.gov.pk:6789/TravelAdvisory/TravelAdvisory")
 
-        # Wait until the element with id="cards" is loaded (max 15 seconds)
+        # Wait until at least one section element is loaded inside #cards (max 15 seconds)
         wait = WebDriverWait(driver, 15)
         wait.until(
-            EC.presence_of_element_located((By.ID, "cards"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "#cards section"))
         )
 
         # Find all section elements inside #cards
