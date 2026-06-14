@@ -1,4 +1,1671 @@
 {
-  "lastScrapedTime": 1781410271393,
-  "data": []
+  "lastScrapedTime": 1781443197920,
+  "data": [
+    {
+      "id": 1,
+      "highway": "Motorway M-15",
+      "date": "2026-06-06 16:21:48",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 130 karmong to KM 142 battal",
+      "direction": "Burhan Thakot",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-15\n2026-06-06 16:21:48\nWeather Alert\nRain\nLocation\nFrom KM 130 karmong to KM 142 battal\nDirection\nBurhan Thakot",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 33.89668328879532,
+        "lng": 72.5993292993094
+      }
+    },
+    {
+      "id": 2,
+      "highway": "GT Road",
+      "date": "2026-05-04 22:41:55",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 1369 Chinab toll plaza to KM 1409 Kharian cantt",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "GT Road\n2026-05-04 22:41:55\nWeather Alert\nCloudy\nLocation\nFrom KM 1369 Chinab toll plaza to KM 1409 Kharian cantt\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 32.039666676093816,
+        "lng": 74.0540393896903
+      }
+    },
+    {
+      "id": 3,
+      "highway": "GT Road",
+      "date": "2026-05-04 22:40:59",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 1335 to KM 1369",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "GT Road\n2026-05-04 22:40:59\nWeather Alert\nCloudy\nLocation\nFrom KM 1335 to KM 1369\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 31.980764927014913,
+        "lng": 74.10064481781954
+      }
+    },
+    {
+      "id": 4,
+      "highway": "GT Road",
+      "date": "2026-05-04 22:40:23",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 1305 kamoki to KM 1335 Aziz cross",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "GT Road\n2026-05-04 22:40:23\nWeather Alert\nCloudy\nLocation\nFrom KM 1305 kamoki to KM 1335 Aziz cross\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 32.06184323039292,
+        "lng": 74.06270653595875
+      }
+    },
+    {
+      "id": 5,
+      "highway": "GT Road",
+      "date": "2026-05-04 22:39:45",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 1276 Kala Shah Kaku to KM 1306 Kamoki",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "GT Road\n2026-05-04 22:39:45\nWeather Alert\nRain\nLocation\nFrom KM 1276 Kala Shah Kaku to KM 1306 Kamoki\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 32.02961032130033,
+        "lng": 74.08423480696325
+      }
+    },
+    {
+      "id": 6,
+      "highway": "GT Road",
+      "date": "2026-03-18 15:54:39",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 1410 Kharian Cantt to KM 1533 Sawan",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "GT Road\n2026-03-18 15:54:39\nWeather Alert\nRain\nLocation\nFrom KM 1410 Kharian Cantt to KM 1533 Sawan\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 31.93385354632071,
+        "lng": 73.87234528933101
+      }
+    },
+    {
+      "id": 7,
+      "highway": "RDC Highway",
+      "date": "2026-01-30 22:10:39",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 516 Bencha to KM 669 Quetta",
+      "direction": "Kalat Quetta",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "RDC Highway\n2026-01-30 22:10:39\nWeather Alert\nCloudy\nLocation\nFrom KM 516 Bencha to KM 669 Quetta\nDirection\nKalat Quetta",
+      "timestamp": "2026-06-14T13:19:57.918Z",
+      "coordinates": {
+        "lat": 33.78812840931334,
+        "lng": 73.00446847600635
+      }
+    },
+    {
+      "id": 8,
+      "highway": "Coastal Highway",
+      "date": "2025-12-10 09:43:31",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad Bridge Beat-1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-12-10 09:43:31\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad Bridge Beat-1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.26799069835801,
+        "lng": 63.440890361433446
+      }
+    },
+    {
+      "id": 9,
+      "highway": "IMDC",
+      "date": "2025-12-09 10:31:21",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 28 Thuli to KM 29 thuli",
+      "direction": "Islamabad Murree",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "IMDC\n2025-12-09 10:31:21\nWeather Alert\nCloudy\nLocation\nFrom KM 28 Thuli to KM 29 thuli\nDirection\nIslamabad Murree",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 33.552808981021535,
+        "lng": 73.15677310103696
+      }
+    },
+    {
+      "id": 10,
+      "highway": "Coastal Highway",
+      "date": "2025-12-09 09:31:50",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad Bridge Beat-1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-12-09 09:31:50\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad Bridge Beat-1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.42803429613369,
+        "lng": 63.34773244384429
+      }
+    },
+    {
+      "id": 11,
+      "highway": "Coastal Highway",
+      "date": "2025-12-09 09:28:49",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-12-09 09:28:49\nAlternate Route\nDue to road closure\nLocation\nAt KM 452\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.46115922007088,
+        "lng": 63.545434291331205
+      }
+    },
+    {
+      "id": 12,
+      "highway": "Coastal Highway",
+      "date": "2025-12-08 08:48:33",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad Bridge Beat-1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-12-08 08:48:33\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad Bridge Beat-1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.315568734832286,
+        "lng": 63.38989272235799
+      }
+    },
+    {
+      "id": 13,
+      "highway": "Coastal Highway",
+      "date": "2025-12-07 10:07:12",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad Bridge Beat-1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-12-07 10:07:12\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad Bridge Beat-1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.398193108002207,
+        "lng": 63.355080319408124
+      }
+    },
+    {
+      "id": 14,
+      "highway": "Coastal Highway",
+      "date": "2025-12-06 10:33:02",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad Bridge Beat-1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-12-06 10:33:02\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad Bridge Beat-1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.3321186709359,
+        "lng": 63.35819779484978
+      }
+    },
+    {
+      "id": 15,
+      "highway": "Coastal Highway",
+      "date": "2025-11-25 11:02:48",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad Bridge Beat-1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-11-25 11:02:48\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad Bridge Beat-1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.459630276250593,
+        "lng": 63.4642659729156
+      }
+    },
+    {
+      "id": 16,
+      "highway": "Coastal Highway",
+      "date": "2025-10-24 08:24:16",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge beat 1 Gwadar area",
+      "direction": "Makola Gwadar",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-24 08:24:16\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge beat 1 Gwadar area\nDirection\nMakola Gwadar",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.269279762917332,
+        "lng": 63.57636270790998
+      }
+    },
+    {
+      "id": 17,
+      "highway": "Coastal Highway",
+      "date": "2025-10-24 08:19:11",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 452 Sawad bridge beat 1 Gwadar area to KM 452 Sawad bridge beat 1 Gwadar",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-10-24 08:19:11\nWeather Alert\nCloudy\nLocation\nFrom KM 452 Sawad bridge beat 1 Gwadar area to KM 452 Sawad bridge beat 1 Gwadar\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.224437963682266,
+        "lng": 63.49692389071462
+      }
+    },
+    {
+      "id": 18,
+      "highway": "Coastal Highway",
+      "date": "2025-10-23 08:23:55",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge beat 1 Gwadar area",
+      "direction": "Makola Gwadar",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-23 08:23:55\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge beat 1 Gwadar area\nDirection\nMakola Gwadar",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.3471359695047,
+        "lng": 63.44147187979097
+      }
+    },
+    {
+      "id": 19,
+      "highway": "Coastal Highway",
+      "date": "2025-10-23 08:18:57",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge beat 1 Gwadar area",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-23 08:18:57\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge beat 1 Gwadar area\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.409367962957187,
+        "lng": 63.62953841224911
+      }
+    },
+    {
+      "id": 20,
+      "highway": "Coastal Highway",
+      "date": "2025-10-16 07:37:52",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-16 07:37:52\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.279859055358617,
+        "lng": 63.44784814137701
+      }
+    },
+    {
+      "id": 21,
+      "highway": "Coastal Highway",
+      "date": "2025-10-15 08:05:24",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-15 08:05:24\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.44214786040933,
+        "lng": 63.38903637152953
+      }
+    },
+    {
+      "id": 22,
+      "highway": "Coastal Highway",
+      "date": "2025-10-14 10:46:36",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-14 10:46:36\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.39241049340188,
+        "lng": 63.50396832734433
+      }
+    },
+    {
+      "id": 23,
+      "highway": "Coastal Highway",
+      "date": "2025-10-13 15:44:19",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-10-13 15:44:19\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.332076415554813,
+        "lng": 63.34377542973838
+      }
+    },
+    {
+      "id": 24,
+      "highway": "Coastal Highway",
+      "date": "2025-10-13 10:12:25",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-13 10:12:25\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.46570079091113,
+        "lng": 63.38843685315762
+      }
+    },
+    {
+      "id": 25,
+      "highway": "Coastal Highway",
+      "date": "2025-10-11 12:21:23",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 452 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-10-11 12:21:23\nAlternate Route\nDue to road closure\nLocation\nAt KM 452 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.32449186053559,
+        "lng": 63.59046522338579
+      }
+    },
+    {
+      "id": 26,
+      "highway": "Coastal Highway",
+      "date": "2025-09-28 16:01:35",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-28 16:01:35\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.216559555337486,
+        "lng": 63.36144674748899
+      }
+    },
+    {
+      "id": 27,
+      "highway": "Coastal Highway",
+      "date": "2025-09-28 16:00:09",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-28 16:00:09\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.439603800025505,
+        "lng": 63.37342356748127
+      }
+    },
+    {
+      "id": 28,
+      "highway": "Coastal Highway",
+      "date": "2025-09-28 09:25:48",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 503 Village",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-28 09:25:48\nAlternate Route\nDue to road closure\nLocation\nAt KM 503 Village\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.320851596213544,
+        "lng": 63.412618010698054
+      }
+    },
+    {
+      "id": 29,
+      "highway": "Coastal Highway",
+      "date": "2025-09-28 08:10:53",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-28 08:10:53\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.39498280991263,
+        "lng": 63.41831937328176
+      }
+    },
+    {
+      "id": 30,
+      "highway": "Coastal Highway",
+      "date": "2025-09-27 19:51:09",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-27 19:51:09\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.436682634723223,
+        "lng": 63.62664739959757
+      }
+    },
+    {
+      "id": 31,
+      "highway": "Coastal Highway",
+      "date": "2025-09-27 19:03:12",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-27 19:03:12\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.20868889815548,
+        "lng": 63.45511938445527
+      }
+    },
+    {
+      "id": 32,
+      "highway": "Coastal Highway",
+      "date": "2025-09-27 18:45:22",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 Ispet hak to KM 343 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-27 18:45:22\nWeather Alert\nCloudy\nLocation\nFrom KM 503 Ispet hak to KM 343 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.243984911984185,
+        "lng": 63.33593575540753
+      }
+    },
+    {
+      "id": 33,
+      "highway": "Coastal Highway",
+      "date": "2025-09-27 18:07:42",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 503 Village",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-27 18:07:42\nAlternate Route\nDue to road closure\nLocation\nAt KM 503 Village\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.251693560101476,
+        "lng": 63.62185766503289
+      }
+    },
+    {
+      "id": 34,
+      "highway": "Coastal Highway",
+      "date": "2025-09-26 10:11:28",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 343 Ispet hak to KM 503 Jewani cross",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-26 10:11:28\nWeather Alert\nCloudy\nLocation\nFrom KM 343 Ispet hak to KM 503 Jewani cross\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.2194206156091,
+        "lng": 63.45377852797541
+      }
+    },
+    {
+      "id": 35,
+      "highway": "Coastal Highway",
+      "date": "2025-09-26 09:56:16",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 to KM 343",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-26 09:56:16\nWeather Alert\nCloudy\nLocation\nFrom KM 503 to KM 343\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.459722577688538,
+        "lng": 63.56191081683953
+      }
+    },
+    {
+      "id": 36,
+      "highway": "Coastal Highway",
+      "date": "2025-09-25 14:13:18",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 to KM 343",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-25 14:13:18\nWeather Alert\nCloudy\nLocation\nFrom KM 503 to KM 343\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.23017030981984,
+        "lng": 63.53786917543445
+      }
+    },
+    {
+      "id": 37,
+      "highway": "Coastal Highway",
+      "date": "2025-09-25 13:37:44",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 343 to KM 503",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-25 13:37:44\nWeather Alert\nCloudy\nLocation\nFrom KM 343 to KM 503\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.223844542614707,
+        "lng": 63.38152926055108
+      }
+    },
+    {
+      "id": 38,
+      "highway": "Coastal Highway",
+      "date": "2025-09-25 09:40:57",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 343 to KM 503",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-25 09:40:57\nWeather Alert\nCloudy\nLocation\nFrom KM 343 to KM 503\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.229902344309842,
+        "lng": 63.503021172245674
+      }
+    },
+    {
+      "id": 39,
+      "highway": "Coastal Highway",
+      "date": "2025-09-24 15:45:55",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 343 Ispet hak to KM 503 Jewani cross",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-24 15:45:55\nWeather Alert\nCloudy\nLocation\nFrom KM 343 Ispet hak to KM 503 Jewani cross\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.309534901662108,
+        "lng": 63.62124710127079
+      }
+    },
+    {
+      "id": 40,
+      "highway": "Coastal Highway",
+      "date": "2025-09-24 09:23:14",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 503 to KM 343",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-24 09:23:14\nWeather Alert\nCloudy\nLocation\nFrom KM 503 to KM 343\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.218571674751903,
+        "lng": 63.43240347239722
+      }
+    },
+    {
+      "id": 41,
+      "highway": "Coastal Highway",
+      "date": "2025-09-24 09:18:53",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 343 Ispet hak to KM 343",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-24 09:18:53\nWeather Alert\nCloudy\nLocation\nFrom KM 343 Ispet hak to KM 343\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.250066022110506,
+        "lng": 63.45530987586928
+      }
+    },
+    {
+      "id": 42,
+      "highway": "Coastal Highway",
+      "date": "2025-09-23 14:21:05",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 350 Ispet hak to KM 350 Makola",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Coastal Highway\n2025-09-23 14:21:05\nWeather Alert\nCloudy\nLocation\nFrom KM 350 Ispet hak to KM 350 Makola\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.342559524524738,
+        "lng": 63.41148995657742
+      }
+    },
+    {
+      "id": 43,
+      "highway": "Coastal Highway",
+      "date": "2025-09-23 14:15:09",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 343 Ispet hak",
+      "direction": "Makola Gwadar",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-23 14:15:09\nAlternate Route\nDue to road closure\nLocation\nAt KM 343 Ispet hak\nDirection\nMakola Gwadar",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.40607127826208,
+        "lng": 63.48171666450092
+      }
+    },
+    {
+      "id": 44,
+      "highway": "Coastal Highway",
+      "date": "2025-09-23 14:08:01",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 350 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-23 14:08:01\nAlternate Route\nDue to road closure\nLocation\nAt KM 350 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.2950503885331,
+        "lng": 63.61471999651962
+      }
+    },
+    {
+      "id": 45,
+      "highway": "Coastal Highway",
+      "date": "2025-09-23 13:35:44",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 350 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-23 13:35:44\nAlternate Route\nDue to road closure\nLocation\nAt KM 350 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.49617804428674,
+        "lng": 63.42803207040629
+      }
+    },
+    {
+      "id": 46,
+      "highway": "Coastal Highway",
+      "date": "2025-09-23 09:31:06",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 343 Sawad bridge",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-23 09:31:06\nAlternate Route\nDue to road closure\nLocation\nAt KM 343 Sawad bridge\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.293794882168665,
+        "lng": 63.58163239833308
+      }
+    },
+    {
+      "id": 47,
+      "highway": "Coastal Highway",
+      "date": "2025-09-18 09:24:20",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 503 village",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-18 09:24:20\nAlternate Route\nDue to road closure\nLocation\nAt KM 503 village\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.337370298551445,
+        "lng": 63.469091092328625
+      }
+    },
+    {
+      "id": 48,
+      "highway": "Coastal Highway",
+      "date": "2025-09-17 13:19:21",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 503 village",
+      "direction": "Gwadar Makola",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Coastal Highway\n2025-09-17 13:19:21\nAlternate Route\nDue to road closure\nLocation\nAt KM 503 village\nDirection\nGwadar Makola",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 25.420225979815438,
+        "lng": 63.41840112176662
+      }
+    },
+    {
+      "id": 49,
+      "highway": "Indus Highway",
+      "date": "2025-08-12 19:19:32",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 271 Naseerabad to KM 328 Ratodero",
+      "direction": "Sehwan Ratodero",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Indus Highway\n2025-08-12 19:19:32\nWeather Alert\nCloudy\nLocation\nFrom KM 271 Naseerabad to KM 328 Ratodero\nDirection\nSehwan Ratodero",
+      "timestamp": "2026-06-14T13:19:57.919Z",
+      "coordinates": {
+        "lat": 27.516770225596012,
+        "lng": 68.07743272881949
+      }
+    },
+    {
+      "id": 50,
+      "highway": "Motorway M-2",
+      "date": "2025-02-16 04:48:49",
+      "alertType": "Road Closed",
+      "condition": "1st 2nd lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 223 Salt range to KM 223 Salt range",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st 2nd lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-02-16 04:48:49\nRoad Closed\n1st 2nd lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 223 Salt range to KM 223 Salt range\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.45213827278312,
+        "lng": 73.41782386333529
+      }
+    },
+    {
+      "id": 51,
+      "highway": "Motorway M-2",
+      "date": "2025-02-16 04:48:49",
+      "alertType": "Road Closed",
+      "condition": "1st 2nd lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 229 Salt range to KM 229 Salt range",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st 2nd lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-02-16 04:48:49\nRoad Closed\n1st 2nd lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 229 Salt range to KM 229 Salt range\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.581732010952734,
+        "lng": 73.52137403838191
+      }
+    },
+    {
+      "id": 52,
+      "highway": "Motorway M-2",
+      "date": "2025-02-15 15:02:41",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 233 Sumbal kallar kahar to KM 233 Sumbal kallar kahar",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-02-15 15:02:41\nRoad Closed\n1st lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 233 Sumbal kallar kahar to KM 233 Sumbal kallar kahar\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.628193523768275,
+        "lng": 73.50270795781478
+      }
+    },
+    {
+      "id": 53,
+      "highway": "Motorway M-2",
+      "date": "2025-02-05 18:49:49",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 213 LILLAH to KM 349 main plaza islamabad",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Motorway M-2\n2025-02-05 18:49:49\nWeather Alert\nCloudy\nLocation\nFrom KM 213 LILLAH to KM 349 main plaza islamabad\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.41046458585657,
+        "lng": 73.58442926917164
+      }
+    },
+    {
+      "id": 54,
+      "highway": "Motorway M-2",
+      "date": "2025-02-05 17:16:10",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 293 neela dulha to KM 349 main plaza islamabad",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-2\n2025-02-05 17:16:10\nWeather Alert\nRain\nLocation\nFrom KM 293 neela dulha to KM 349 main plaza islamabad\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.59022165119141,
+        "lng": 73.36153850739552
+      }
+    },
+    {
+      "id": 55,
+      "highway": "Motorway M-2",
+      "date": "2025-02-05 14:37:54",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 213 LILLAH to KM 266 Balkasar",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-2\n2025-02-05 14:37:54\nWeather Alert\nRain\nLocation\nFrom KM 213 LILLAH to KM 266 Balkasar\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.57446657940955,
+        "lng": 73.50799635134246
+      }
+    },
+    {
+      "id": 56,
+      "highway": "Motorway M-2",
+      "date": "2025-01-31 20:36:50",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 225 Salt range to KM 225 Salt range",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-01-31 20:36:50\nRoad Closed\n1st lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 225 Salt range to KM 225 Salt range\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.52933909748419,
+        "lng": 73.5985124872711
+      }
+    },
+    {
+      "id": 57,
+      "highway": "Motorway M-2",
+      "date": "2025-01-31 17:30:43",
+      "alertType": "Road Closed",
+      "condition": "2nd lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 226 Salt range to KM 226 Salt range",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 2nd lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-01-31 17:30:43\nRoad Closed\n2nd lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 226 Salt range to KM 226 Salt range\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.538136932659675,
+        "lng": 73.38283325703229
+      }
+    },
+    {
+      "id": 58,
+      "highway": "Motorway M-2",
+      "date": "2025-01-26 04:54:37",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 223 Salt range to KM 223 Salt range",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-01-26 04:54:37\nRoad Closed\n1st lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 223 Salt range to KM 223 Salt range\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.47910014949467,
+        "lng": 73.62949964804827
+      }
+    },
+    {
+      "id": 59,
+      "highway": "Motorway M-2",
+      "date": "2025-01-24 01:50:47",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 230 Salt range to KM 230 Salt range",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-01-24 01:50:47\nRoad Closed\n1st lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 230 Salt range to KM 230 Salt range\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.481462142689594,
+        "lng": 73.48172353265588
+      }
+    },
+    {
+      "id": 60,
+      "highway": "Motorway M-2",
+      "date": "2025-01-23 03:04:08",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 229 Salt range to KM 229 Salt range",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-01-23 03:04:08\nRoad Closed\n1st lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 229 Salt range to KM 229 Salt range\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.40999758962764,
+        "lng": 73.41495975687612
+      }
+    },
+    {
+      "id": 61,
+      "highway": "Motorway M-2",
+      "date": "2025-01-22 14:15:14",
+      "alertType": "Road Closed",
+      "condition": "2nd lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 225 Salt range to KM 225 Salt range",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 2nd lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-2\n2025-01-22 14:15:14\nRoad Closed\n2nd lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 225 Salt range to KM 225 Salt range\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.49647248284385,
+        "lng": 73.47245529199854
+      }
+    },
+    {
+      "id": 62,
+      "highway": "Motorway M-2",
+      "date": "2025-01-22 09:08:01",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Fog",
+      "location": "From KM 349 islamabad toll plaza to KM 0 lahore",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Fog",
+      "fullText": "Motorway M-2\n2025-01-22 09:08:01\nRoad Closed\nAll lane(s) closed due to Fog\nLocation\nFrom KM 349 islamabad toll plaza to KM 0 lahore\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.469691554824024,
+        "lng": 73.63701335117881
+      }
+    },
+    {
+      "id": 63,
+      "highway": "Motorway M-14",
+      "date": "2025-01-21 10:41:19",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Repair",
+      "location": "From KM 50 kamra/kunda to KM 50 kamra/kunda",
+      "direction": "Dera Ismail Khan Hakla",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Repair",
+      "fullText": "Motorway M-14\n2025-01-21 10:41:19\nRoad Closed\n1st lane(s) closed due to Repair\nLocation\nFrom KM 50 kamra/kunda to KM 50 kamra/kunda\nDirection\nDera Ismail Khan Hakla",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.94417418527543,
+        "lng": 72.51392561849988
+      }
+    },
+    {
+      "id": 64,
+      "highway": "Motorway M-14",
+      "date": "2025-01-21 10:40:54",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Construction",
+      "location": "From KM 150 daudkhel factory area to KM 150 daudkhel factory area",
+      "direction": "Hakla Dera Ismail Khan",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Construction",
+      "fullText": "Motorway M-14\n2025-01-21 10:40:54\nRoad Closed\n1st lane(s) closed due to Construction\nLocation\nFrom KM 150 daudkhel factory area to KM 150 daudkhel factory area\nDirection\nHakla Dera Ismail Khan",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.916951879555896,
+        "lng": 72.36925075600116
+      }
+    },
+    {
+      "id": 65,
+      "highway": "N-50",
+      "date": "2024-12-30 12:11:29",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 0 Kuchlak to KM 99 Muslim Bagh",
+      "direction": "Kuchlak Muslim Bagh",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "N-50\n2024-12-30 12:11:29\nWeather Alert\nCloudy\nLocation\nFrom KM 0 Kuchlak to KM 99 Muslim Bagh\nDirection\nKuchlak Muslim Bagh",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 31.88803364429318,
+        "lng": 73.90451418589062
+      }
+    },
+    {
+      "id": 66,
+      "highway": "Motorway M-2",
+      "date": "2024-12-27 10:00:01",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 0 to KM 0",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Motorway M-2\n2024-12-27 10:00:01\nWeather Alert\nCloudy\nLocation\nFrom KM 0 to KM 0\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.5073540997758,
+        "lng": 73.61570625153752
+      }
+    },
+    {
+      "id": 67,
+      "highway": "Motorway M-2",
+      "date": "2024-12-27 09:59:37",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 0 to KM 0",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Motorway M-2\n2024-12-27 09:59:37\nWeather Alert\nCloudy\nLocation\nFrom KM 0 to KM 0\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.40974174747249,
+        "lng": 73.64974691340093
+      }
+    },
+    {
+      "id": 68,
+      "highway": "Motorway M-2",
+      "date": "2024-12-19 22:03:57",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Fog",
+      "location": "From KM 0 Swabi Interchange to KM 0 MTP Peshawar",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Fog",
+      "fullText": "Motorway M-2\n2024-12-19 22:03:57\nRoad Closed\nAll lane(s) closed due to Fog\nLocation\nFrom KM 0 Swabi Interchange to KM 0 MTP Peshawar\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.55199138095176,
+        "lng": 73.3575671673579
+      }
+    },
+    {
+      "id": 69,
+      "highway": "Motorway M-2",
+      "date": "2024-11-13 10:11:10",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Fog",
+      "location": "From KM 137 sial more to KM 162 kot momin",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Fog",
+      "fullText": "Motorway M-2\n2024-11-13 10:11:10\nRoad Closed\nAll lane(s) closed due to Fog\nLocation\nFrom KM 137 sial more to KM 162 kot momin\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.351819026607146,
+        "lng": 73.37473840977427
+      }
+    },
+    {
+      "id": 70,
+      "highway": "Motorway M-2",
+      "date": "2024-11-13 10:04:05",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Fog",
+      "location": "From KM 120 pindi bhattian to KM 156 kot momin",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Fog",
+      "fullText": "Motorway M-2\n2024-11-13 10:04:05\nRoad Closed\nAll lane(s) closed due to Fog\nLocation\nFrom KM 120 pindi bhattian to KM 156 kot momin\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.46357908684015,
+        "lng": 73.62964978003903
+      }
+    },
+    {
+      "id": 71,
+      "highway": "Motorway M-2",
+      "date": "2024-11-07 10:39:23",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Repair",
+      "location": "From KM 8 Babu Sabu to KM 8 Babu Sabu",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Repair",
+      "fullText": "Motorway M-2\n2024-11-07 10:39:23\nRoad Closed\n1st lane(s) closed due to Repair\nLocation\nFrom KM 8 Babu Sabu to KM 8 Babu Sabu\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.49718217679583,
+        "lng": 73.55969210143688
+      }
+    },
+    {
+      "id": 72,
+      "highway": "Motorway M-3",
+      "date": "2024-11-02 20:11:35",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Accident",
+      "location": "From KM 1098 Nankana Sahib to KM 1098 Nankana Sahib",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Accident",
+      "fullText": "Motorway M-3\n2024-11-02 20:11:35\nRoad Closed\n1st lane(s) closed due to Accident\nLocation\nFrom KM 1098 Nankana Sahib to KM 1098 Nankana Sahib\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.72216348000017,
+        "lng": 72.95285904332977
+      }
+    },
+    {
+      "id": 73,
+      "highway": "Motorway M-3",
+      "date": "2024-11-02 20:04:32",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 1132 Sharaq Pur to KM 1098 Nankana Sahib",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-3\n2024-11-02 20:04:32\nWeather Alert\nRain\nLocation\nFrom KM 1132 Sharaq Pur to KM 1098 Nankana Sahib\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.6540847406669,
+        "lng": 72.97507155345502
+      }
+    },
+    {
+      "id": 74,
+      "highway": "Motorway M-2",
+      "date": "2024-11-02 19:58:26",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 107 Chakri to KM 117 Kalar Kahhar",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-2\n2024-11-02 19:58:26\nWeather Alert\nRain\nLocation\nFrom KM 107 Chakri to KM 117 Kalar Kahhar\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.4085811288133,
+        "lng": 73.45861470129331
+      }
+    },
+    {
+      "id": 75,
+      "highway": "Motorway M-3",
+      "date": "2024-11-02 19:56:35",
+      "alertType": "Road Closed",
+      "condition": "1st 2nd lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 923 Salam to KM 924 Salam",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st 2nd lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Motorway M-3\n2024-11-02 19:56:35\nRoad Closed\n1st 2nd lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 923 Salam to KM 924 Salam\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.74732279412347,
+        "lng": 73.0650959425831
+      }
+    },
+    {
+      "id": 76,
+      "highway": "Motorway M-3",
+      "date": "2024-11-02 19:09:26",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Repair",
+      "location": "From KM 950 Salam to KM 951 Salam",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Repair",
+      "fullText": "Motorway M-3\n2024-11-02 19:09:26\nRoad Closed\nAll lane(s) closed due to Repair\nLocation\nFrom KM 950 Salam to KM 951 Salam\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.66853485122169,
+        "lng": 73.1332095246604
+      }
+    },
+    {
+      "id": 77,
+      "highway": "Motorway M-3",
+      "date": "2024-10-29 15:17:52",
+      "alertType": "Weather Alert",
+      "condition": "Tunnel Blockade",
+      "location": "From KM 920 Sharaqpur to KM 920 Nankana Sahib",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Weather Alert - Tunnel Blockade",
+      "fullText": "Motorway M-3\n2024-10-29 15:17:52\nWeather Alert\nTunnel Blockade\nLocation\nFrom KM 920 Sharaqpur to KM 920 Nankana Sahib\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.73331594914202,
+        "lng": 73.12756223841707
+      }
+    },
+    {
+      "id": 78,
+      "highway": "Motorway M-3",
+      "date": "2024-10-29 15:17:03",
+      "alertType": "Weather Alert",
+      "condition": "Earthquake",
+      "location": "From KM 920 Sharaqpur to KM 920 Nankana Sahib",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Earthquake",
+      "fullText": "Motorway M-3\n2024-10-29 15:17:03\nWeather Alert\nEarthquake\nLocation\nFrom KM 920 Sharaqpur to KM 920 Nankana Sahib\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.82349902381121,
+        "lng": 73.15340737147022
+      }
+    },
+    {
+      "id": 79,
+      "highway": "Motorway M-3",
+      "date": "2024-10-29 15:13:28",
+      "alertType": "Weather Alert",
+      "condition": "Land Sliding",
+      "location": "From KM 920 Sharaqpur to KM 920 Nankana Sahib",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Land Sliding",
+      "fullText": "Motorway M-3\n2024-10-29 15:13:28\nWeather Alert\nLand Sliding\nLocation\nFrom KM 920 Sharaqpur to KM 920 Nankana Sahib\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.60796448431785,
+        "lng": 72.9640537836411
+      }
+    },
+    {
+      "id": 80,
+      "highway": "Motorway M-3",
+      "date": "2024-10-29 15:01:36",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Fog",
+      "location": "From KM 1132 Sharaqpur to KM 1098 Nankana Sahib",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Fog",
+      "fullText": "Motorway M-3\n2024-10-29 15:01:36\nRoad Closed\nAll lane(s) closed due to Fog\nLocation\nFrom KM 1132 Sharaqpur to KM 1098 Nankana Sahib\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.59671151347988,
+        "lng": 73.17573396993168
+      }
+    },
+    {
+      "id": 81,
+      "highway": "Motorway M-3",
+      "date": "2024-10-28 14:49:14",
+      "alertType": "Road Closed",
+      "condition": "1st 2nd lane(s) closed due to Repair",
+      "location": "From KM 920 Lahore to KM 923 Burhan",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st 2nd lane(s) closed due to Repair",
+      "fullText": "Motorway M-3\n2024-10-28 14:49:14\nRoad Closed\n1st 2nd lane(s) closed due to Repair\nLocation\nFrom KM 920 Lahore to KM 923 Burhan\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.54517549993521,
+        "lng": 73.14798531304979
+      }
+    },
+    {
+      "id": 82,
+      "highway": "Motorway M-4",
+      "date": "2024-10-28 14:39:24",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Construction",
+      "location": "From KM 0 Lahore to KM 0 Multan",
+      "direction": "Pindi Bhattian Multan",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Construction",
+      "fullText": "Motorway M-4\n2024-10-28 14:39:24\nRoad Closed\nAll lane(s) closed due to Construction\nLocation\nFrom KM 0 Lahore to KM 0 Multan\nDirection\nPindi Bhattian Multan",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.6698906327717,
+        "lng": 73.03816876035563
+      }
+    },
+    {
+      "id": 83,
+      "highway": "Motorway M-3",
+      "date": "2024-10-28 14:28:51",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Accident",
+      "location": "From KM 921 Lahore to KM 923 Multan",
+      "direction": "Abdul Hakim Lahore",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Accident",
+      "fullText": "Motorway M-3\n2024-10-28 14:28:51\nRoad Closed\n1st lane(s) closed due to Accident\nLocation\nFrom KM 921 Lahore to KM 923 Multan\nDirection\nAbdul Hakim Lahore",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.763586670074076,
+        "lng": 72.94321086346251
+      }
+    },
+    {
+      "id": 84,
+      "highway": "GT Road",
+      "date": "2024-10-27 11:57:18",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 608 Kot sabzal to KM 618 chani Ghoth Testing",
+      "direction": "Multan Rahimyar Khan",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "GT Road\n2024-10-27 11:57:18\nWeather Alert\nCloudy\nLocation\nFrom KM 608 Kot sabzal to KM 618 chani Ghoth Testing\nDirection\nMultan Rahimyar Khan",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.09684152187907,
+        "lng": 73.87371111663961
+      }
+    },
+    {
+      "id": 85,
+      "highway": "GT Road",
+      "date": "2024-10-26 10:33:47",
+      "alertType": "Road Closed",
+      "condition": "1st 2nd lane(s) closed due to Construction",
+      "location": "From KM 608 Kot sabzal Testing to KM 618 chani Ghoth Testing",
+      "direction": "Multan Rahimyar Khan",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st 2nd lane(s) closed due to Construction",
+      "fullText": "GT Road\n2024-10-26 10:33:47\nRoad Closed\n1st 2nd lane(s) closed due to Construction\nLocation\nFrom KM 608 Kot sabzal Testing to KM 618 chani Ghoth Testing\nDirection\nMultan Rahimyar Khan",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 31.95395539824546,
+        "lng": 73.98578619649368
+      }
+    },
+    {
+      "id": 86,
+      "highway": "GT Road",
+      "date": "2024-10-26 10:17:58",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 818 Testing from place 26 Oct to KM 861 Testing To place 26 Oct",
+      "direction": "Multan Rahimyar Khan",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "GT Road\n2024-10-26 10:17:58\nWeather Alert\nRain\nLocation\nFrom KM 818 Testing from place 26 Oct to KM 861 Testing To place 26 Oct\nDirection\nMultan Rahimyar Khan",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.00484101836884,
+        "lng": 73.9923859795321
+      }
+    },
+    {
+      "id": 87,
+      "highway": "Motorway M-3",
+      "date": "2024-10-25 14:49:42",
+      "alertType": "Road Closed",
+      "condition": "1st 2nd lane(s) closed due to Repair",
+      "location": "From KM 1120 Sharaqpur to KM 1116 Sharaqpur",
+      "direction": "Abdul Hakim Lahore",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st 2nd lane(s) closed due to Repair",
+      "fullText": "Motorway M-3\n2024-10-25 14:49:42\nRoad Closed\n1st 2nd lane(s) closed due to Repair\nLocation\nFrom KM 1120 Sharaqpur to KM 1116 Sharaqpur\nDirection\nAbdul Hakim Lahore",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.55866168598465,
+        "lng": 73.06835127101401
+      }
+    },
+    {
+      "id": 88,
+      "highway": "Motorway M-3",
+      "date": "2024-10-25 13:44:14",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Accident",
+      "location": "From KM 1110 Nankana Sahib to KM 1111 Nankana Sahib",
+      "direction": "Abdul Hakim Lahore",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Accident",
+      "fullText": "Motorway M-3\n2024-10-25 13:44:14\nRoad Closed\n1st lane(s) closed due to Accident\nLocation\nFrom KM 1110 Nankana Sahib to KM 1111 Nankana Sahib\nDirection\nAbdul Hakim Lahore",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.673687326919385,
+        "lng": 73.12560592503752
+      }
+    },
+    {
+      "id": 89,
+      "highway": "Motorway M-3",
+      "date": "2024-10-25 10:32:59",
+      "alertType": "Alternate Route",
+      "condition": "Due to road closure",
+      "location": "At KM 1132 Sharaqpur",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": true,
+      "description": "Alternate Route - Due to road closure",
+      "fullText": "Motorway M-3\n2024-10-25 10:32:59\nAlternate Route\nDue to road closure\nLocation\nAt KM 1132 Sharaqpur\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.558784807099585,
+        "lng": 73.10535944039027
+      }
+    },
+    {
+      "id": 90,
+      "highway": "GT Road",
+      "date": "2024-10-24 10:51:33",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 872 Adda Shanal to KM 820 Musafir khana",
+      "direction": "Multan Rahimyar Khan",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "GT Road\n2024-10-24 10:51:33\nWeather Alert\nCloudy\nLocation\nFrom KM 872 Adda Shanal to KM 820 Musafir khana\nDirection\nMultan Rahimyar Khan",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 31.95269362736544,
+        "lng": 74.03934597772029
+      }
+    },
+    {
+      "id": 91,
+      "highway": "Motorway M-2",
+      "date": "2024-10-23 14:29:43",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Hazardous Material Spills",
+      "location": "From KM 163 to KM 164",
+      "direction": "Islamabad Lahore",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Hazardous Material Spills",
+      "fullText": "Motorway M-2\n2024-10-23 14:29:43\nRoad Closed\nAll lane(s) closed due to Hazardous Material Spills\nLocation\nFrom KM 163 to KM 164\nDirection\nIslamabad Lahore",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.54591638982916,
+        "lng": 73.53991458332604
+      }
+    },
+    {
+      "id": 92,
+      "highway": "Motorway M-3",
+      "date": "2024-10-23 14:28:01",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 926 to KM 920",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-3\n2024-10-23 14:28:01\nWeather Alert\nRain\nLocation\nFrom KM 926 to KM 920\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.582394596208516,
+        "lng": 73.1466325562258
+      }
+    },
+    {
+      "id": 93,
+      "highway": "Motorway M-3",
+      "date": "2024-10-23 12:01:49",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 920 to KM 920",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-3\n2024-10-23 12:01:49\nWeather Alert\nRain\nLocation\nFrom KM 920 to KM 920\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.58541818468986,
+        "lng": 73.09518163511997
+      }
+    },
+    {
+      "id": 94,
+      "highway": "Motorway M-3",
+      "date": "2024-10-23 11:45:11",
+      "alertType": "Weather Alert",
+      "condition": "Cloudy",
+      "location": "From KM 920 to KM 920",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Cloudy",
+      "fullText": "Motorway M-3\n2024-10-23 11:45:11\nWeather Alert\nCloudy\nLocation\nFrom KM 920 to KM 920\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.6513112995366,
+        "lng": 73.17592105489848
+      }
+    },
+    {
+      "id": 95,
+      "highway": "Motorway M-3",
+      "date": "2024-10-23 11:45:11",
+      "alertType": "Weather Alert",
+      "condition": "Rain",
+      "location": "From KM 920 to KM 920",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Rain",
+      "fullText": "Motorway M-3\n2024-10-23 11:45:11\nWeather Alert\nRain\nLocation\nFrom KM 920 to KM 920\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.54008877004404,
+        "lng": 73.00206125147942
+      }
+    },
+    {
+      "id": 96,
+      "highway": "Motorway M-3",
+      "date": "2024-10-22 10:22:09",
+      "alertType": "Weather Alert",
+      "condition": "Fog (visibility 32 meter)",
+      "location": "From KM 1098 Nankana Sahib to KM 1132 Sharaqpur",
+      "direction": "Lahore Abdul Hakim",
+      "recommendAlternative": false,
+      "description": "Weather Alert - Fog (visibility 32 meter)",
+      "fullText": "Motorway M-3\n2024-10-22 10:22:09\nWeather Alert\nFog (visibility 32 meter)\nLocation\nFrom KM 1098 Nankana Sahib to KM 1132 Sharaqpur\nDirection\nLahore Abdul Hakim",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.71920655274506,
+        "lng": 72.93600910615869
+      }
+    },
+    {
+      "id": 97,
+      "highway": "Lyari Expressway",
+      "date": "2024-10-22 10:22:09",
+      "alertType": "Road Closed",
+      "condition": "1st lane(s) closed due to Vehicle Breakdown",
+      "location": "From KM 4 to KM 4",
+      "direction": "Karachi Karachi",
+      "recommendAlternative": true,
+      "description": "Road Closed - 1st lane(s) closed due to Vehicle Breakdown",
+      "fullText": "Lyari Expressway\n2024-10-22 10:22:09\nRoad Closed\n1st lane(s) closed due to Vehicle Breakdown\nLocation\nFrom KM 4 to KM 4\nDirection\nKarachi Karachi",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 33.7497429018305,
+        "lng": 73.119192621023
+      }
+    },
+    {
+      "id": 98,
+      "highway": "Motorway M-2",
+      "date": "2024-10-22 09:24:43",
+      "alertType": "Road Closed",
+      "condition": "All lane(s) closed due to Flood",
+      "location": "From KM 217 Bahera Toll Plaza to KM 218 Bahera Toll Plaza",
+      "direction": "Lahore Islamabad",
+      "recommendAlternative": true,
+      "description": "Road Closed - All lane(s) closed due to Flood",
+      "fullText": "Motorway M-2\n2024-10-22 09:24:43\nRoad Closed\nAll lane(s) closed due to Flood\nLocation\nFrom KM 217 Bahera Toll Plaza to KM 218 Bahera Toll Plaza\nDirection\nLahore Islamabad",
+      "timestamp": "2026-06-14T13:19:57.920Z",
+      "coordinates": {
+        "lat": 32.43867548416558,
+        "lng": 73.58338090856911
+      }
+    }
+  ]
 }

@@ -55,16 +55,12 @@ const checkRoute = async (req, res) => {
             
             if (!locationMatch) return false;
 
-            // 2. Filter by Date: only show alerts published on or before the travelDate
+            // 2. Filter by Date: only show alerts published on the exact travelDate (YYYY-MM-DD)
             if (travelDate && alert.date) {
                 try {
                     // Extract the date part YYYY-MM-DD from "YYYY-MM-DD HH:MM:SS"
                     const alertDateString = alert.date.split(' ')[0];
-                    const alertDateParsed = new Date(alertDateString);
-                    const userTravelDateParsed = new Date(travelDate);
-                    
-                    // If the travel date is earlier than the alert publication date, the alert doesn't affect it yet
-                    if (userTravelDateParsed < alertDateParsed) {
+                    if (alertDateString !== travelDate) {
                         return false;
                     }
                 } catch (dateErr) {
