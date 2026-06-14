@@ -94,7 +94,9 @@ const ProviderHistory = () => {
                     </td>
                     <td className="p-4 text-gray-900 dark:text-white">{job.serviceType}</td>
                     <td className="p-4 text-gray-700 dark:text-gray-300">{job.userInfo?.name || 'User'}</td>
-                    <td className="p-4 text-green-600 dark:text-green-400 font-bold">TBD</td>
+                    <td className="p-4 text-green-600 dark:text-green-400 font-bold">
+                        {job.paymentAmount ? `PKR ${job.paymentAmount.toLocaleString()}` : 'TBD'}
+                    </td>
                     <td className="p-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${getStatusColor(job.status)}`}>
                         {job.status}

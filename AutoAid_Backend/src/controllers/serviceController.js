@@ -1,4 +1,5 @@
 const ServiceRequest = require('../models/ServiceRequest');
+const Payment = require('../models/Payment');
 const User = require('../models/User');
 const { spawn } = require('child_process');
 const path = require('path');
@@ -238,12 +239,14 @@ exports.getProviderRequests = async (req, res) => {
         const requests = await ServiceRequest.find({ providerId })
             .sort({ createdAt: -1 });
 
-        // Populate user details for each request
+        // Populate user details and payment details for each request
         const populatedRequests = await Promise.all(requests.map(async (reqItem) => {
             const user = await User.findOne({ uid: reqItem.userId });
+            const payment = await Payment.findOne({ serviceRequestId: reqItem._id, paymentStatus: 'Paid' });
             return {
                 ...reqItem._doc,
-                user: user ? { name: user.fullName, contact: user.contactNumber } : null
+                user: user ? { name: user.fullName, contact: user.contactNumber } : null,
+                paymentAmount: payment ? payment.amount : null,
             };
         }));
 

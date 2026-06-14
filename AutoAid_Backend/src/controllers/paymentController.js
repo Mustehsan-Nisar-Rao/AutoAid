@@ -107,3 +107,45 @@ exports.getPaymentById = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+// @desc    Get Provider Stats
+// @route   GET /api/payments/provider/stats
+// @access  Private (Provider)
+exports.getProviderStats = async (req, res) => {
+    try {
+        const providerId = req.user._id.toString();
+
+        // Find all paid payments for this provider
+        const payments = await Payment.find({ providerId, paymentStatus: 'Paid' });
+
+        const totalEarnings = payments.reduce((sum, p) => sum + p.amount, 0);
+
+        // Group by month
+        const monthlyEarnings = {};
+        payments.forEach(p => {
+            const date = new Date(p.paidAt || p.createdAt);
+            const monthYear = date.toLocaleString('default', { month: 'short', year: 'numeric' });
+            if (!monthlyEarnings[monthYear]) {
+                monthlyEarnings[monthYear] = 0;
+            }
+            monthlyEarnings[monthYear] += p.amount;
+        });
+
+        // Convert to array suitable for charts
+        const earningsData = Object.keys(monthlyEarnings).map(month => ({
+            month,
+            amount: monthlyEarnings[month]
+        })).sort((a, b) => new Date(a.month) - new Date(b.month)); // Sort chronological if possible
+
+        res.status(200).json({
+            success: true,
+            stats: {
+                totalEarnings,
+                earningsData
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching provider stats:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
