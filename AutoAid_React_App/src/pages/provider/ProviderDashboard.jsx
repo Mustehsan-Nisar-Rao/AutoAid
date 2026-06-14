@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { FaWallet, FaCheckCircle, FaStar, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ProviderDashboard = () => {
     const { currentUser, fetchUserProfile } = useAuth();
@@ -9,11 +10,28 @@ const ProviderDashboard = () => {
     const [isAvailable, setIsAvailable] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [statsData, setStatsData] = useState({ totalEarnings: 0, earningsData: [] });
+
     useEffect(() => {
         if (currentUser) {
             setIsAvailable(currentUser.isAvailable || false);
+            fetchProviderStats();
         }
     }, [currentUser]);
+
+    const fetchProviderStats = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/api/payments/provider/stats', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            if (data.success) {
+                setStatsData(data.stats);
+            }
+        } catch (error) {
+            console.error('Error fetching provider stats:', error);
+        }
+    };
 
     const updateStatus = async (status, location = null) => {
         setIsLoading(true);
@@ -81,7 +99,7 @@ const ProviderDashboard = () => {
   const stats = [
     { 
         label: 'Total Earnings', 
-        value: 'PKR 0', 
+        value: `PKR ${statsData.totalEarnings.toLocaleString()}`, 
         icon: <FaWallet />, 
         color: 'text-green-400', 
         bg: 'bg-green-400/10' 
@@ -102,11 +120,6 @@ const ProviderDashboard = () => {
     },
   ];
 
-  const recentActivity = [
-    { id: 1, type: 'Job Completed', detail: 'Towing Service for Honda Civic', time: '2 hours ago', amount: '+ PKR 2,500' },
-    { id: 2, type: 'Job Completed', detail: 'Jumpstart for Toyota Corolla', time: '5 hours ago', amount: '+ PKR 1,000' },
-    { id: 3, type: 'Payout', detail: 'Weekly Payout to Bank Account', time: '1 day ago', amount: '- PKR 15,000' },
-  ];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -148,32 +161,47 @@ const ProviderDashboard = () => {
         ))}
       </div>
 
-      {/* Recent Activity */}
+      {/* Earnings Chart */}
       <div className="bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg transition-colors duration-300">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Monthly Earnings</h2>
         </div>
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {recentActivity.map((activity) => (
-            <div key={activity.id} className="p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-white">{activity.type}</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{activity.detail}</p>
-                <span className="text-xs text-gray-500 mt-1 block sm:hidden">{activity.time}</span>
-              </div>
-              <div className="flex flex-col items-end">
-                <span className={`font-bold ${activity.amount.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                  {activity.amount}
-                </span>
-                <span className="text-xs text-gray-500 hidden sm:block">{activity.time}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="p-4 text-center border-t border-gray-200 dark:border-gray-700">
-          <button className="text-primary hover:text-primary-light text-sm font-medium transition-colors">
-            View All Activity
-          </button>
+        <div className="p-6 h-80 w-full">
+            {statsData.earningsData.length === 0 ? (
+                <div className="h-full flex items-center justify-center text-gray-500">No earnings data available yet.</div>
+            ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={statsData.earningsData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                        <XAxis 
+                            dataKey="month" 
+                            stroke="#888" 
+                            fontSize={12} 
+                            tickLine={false} 
+                            axisLine={false}
+                        />
+                        <YAxis 
+                            stroke="#888" 
+                            fontSize={12} 
+                            tickLine={false} 
+                            axisLine={false}
+                            tickFormatter={(value) => `PKR ${value}`}
+                        />
+                        <Tooltip 
+                            cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+                            contentStyle={{ backgroundColor: '#1a1c1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '12px' }}
+                            itemStyle={{ color: '#10b981' }}
+                            formatter={(value) => [`PKR ${value.toLocaleString()}`, 'Amount']}
+                        />
+                        <Bar 
+                            dataKey="amount" 
+                            fill="#10b981" 
+                            radius={[4, 4, 0, 0]} 
+                            barSize={40}
+                        />
+                    </BarChart>
+                </ResponsiveContainer>
+            )}
         </div>
       </div>
     </div>
