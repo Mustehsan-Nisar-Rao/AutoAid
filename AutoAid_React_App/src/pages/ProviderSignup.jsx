@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaTools, FaGasPump, FaUserTie, FaTruck, FaKey, FaUpload, FaCar } from 'react-icons/fa';
 import { MdPerson, MdMail, MdCall, MdCalendarToday, MdLock } from 'react-icons/md';
@@ -91,12 +91,12 @@ const ProviderSignup = () => {
         try {
             // 1. Create user in Firebase
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            const user = userCredential.user;
-            console.log('Firebase User Created:', user.uid);
+            const firebaseUser = userCredential.user;
+            console.log('Firebase User Created:', firebaseUser.uid);
 
             // 2. Prepare FormData
             const data = new FormData();
-            data.append('uid', user.uid);
+            data.append('uid', firebaseUser.uid);
             data.append('role', 'provider');
             data.append('serviceType', serviceType);
             data.append('age', age.toString());
@@ -122,12 +122,23 @@ const ProviderSignup = () => {
             if (response.ok) {
                 navigate('/verify-account', { state: { email: formData.email } });
             } else {
+                // Backend rejected — delete orphan Firebase user so same email can be retried
+                try { await firebaseUser.delete(); } catch (_) {}
+                console.warn('Backend rejected provider signup, Firebase user cleaned up.');
                 error(`Error: ${result.error}`);
             }
 
         } catch (err) {
             console.error("Signup Error:", err);
-            error(`Error: ${err.message}`);
+            if (err.code === 'auth/email-already-in-use') {
+                error('This email is already registered. Please log in or use a different email.');
+            } else if (err.code === 'auth/weak-password') {
+                error('Password is too weak. Use at least 6 characters.');
+            } else if (err.code === 'auth/network-request-failed') {
+                error('Network error. Please check your internet connection.');
+            } else {
+                error(`Error: ${err.message}`);
+            }
         }
     };
 
