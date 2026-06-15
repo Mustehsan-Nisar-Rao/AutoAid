@@ -1,8 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { 
 import { API_BASE_URL } from '../utils/api';
-    FaUserCircle, FaEnvelope, FaPhone, FaMapMarkerAlt, 
+  import {   FaUserCircle, FaEnvelope, FaPhone, FaMapMarkerAlt, 
     FaStar, FaBriefcase, FaIdCard, FaCar, FaEdit, FaSave, FaTimes, FaCamera 
 } from 'react-icons/fa';
 
