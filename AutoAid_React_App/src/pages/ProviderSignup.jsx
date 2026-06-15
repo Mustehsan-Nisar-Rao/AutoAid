@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaTools, FaGasPump, FaUserTie, FaTruck, FaKey, FaUpload, FaCar } from 'react-icons/fa';
 import { MdPerson, MdMail, MdCall, MdCalendarToday, MdLock } from 'react-icons/md';
@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
+import { API_BASE_URL } from '../utils/api';
 
 const ProviderSignup = () => {
     const navigate = useNavigate();
@@ -111,7 +112,7 @@ const ProviderSignup = () => {
             });
 
             // 3. Send to Backend
-            const response = await fetch('http://localhost:3000/api/auth/signup', {
+            const response = await fetch('${API_BASE_URL}/api/auth/signup', {
                 method: 'POST',
                 body: data, // No Content-Type header needed for FormData
             });

@@ -10,8 +10,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-# Load environment variables from .env file
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
+# Load environment variables from .env file (works in both local dev and Render)
+load_dotenv()
 
 # Add parent directory to path to import pipeline modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     FaSearch, FaExclamationTriangle, FaRoad, FaSyncAlt, 
@@ -11,6 +11,7 @@ import { useNotification } from '../context/NotificationContext';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { API_BASE_URL } from '../utils/api';
 
 // Fix default Leaflet marker icons broken by Webpack/Vite
 delete L.Icon.Default.prototype._getIconUrl;
@@ -164,7 +165,7 @@ const RoutePlanning = () => {
             setEndCoords(endC);
 
             // 2. Fetch NHA Alerts from Backend
-            const response = await fetch('http://localhost:3000/api/nha/route-check', {
+            const response = await fetch('${API_BASE_URL}/api/nha/route-check', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

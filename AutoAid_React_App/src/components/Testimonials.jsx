@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+import { API_BASE_URL } from '../utils/api';
 
 const dummyTestimonials = [
     {
@@ -29,7 +30,7 @@ const Testimonials = () => {
     useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/services/testimonials');
+                const response = await fetch('${API_BASE_URL}/api/services/testimonials');
                 const data = await response.json();
                 if (data.success && data.testimonials && data.testimonials.length > 0) {
                     setTestimonials(data.testimonials);
@@ -50,7 +51,7 @@ const Testimonials = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/150';
         if (imagePath.startsWith('http') || imagePath.startsWith('blob:')) return imagePath;
-        return `http://localhost:3000/${imagePath.replace(/\\/g, '/')}`;
+        return `${API_BASE_URL}/${imagePath.replace(/\\/g, '/')}`;
     };
 
     // Duplicate testimonials to create a seamless scrolling effect

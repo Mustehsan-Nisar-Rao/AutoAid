@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+﻿import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaPhoneAlt, FaCommentAlt, FaMapMarkerAlt, FaCheckCircle, FaLocationArrow, FaArrowLeft, FaTimes, FaPaperPlane, FaCheckDouble } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '../../utils/api';
 
 const defaultCenter = { lat: 31.5204, lng: 74.3587 }; // Lahore default
 
@@ -37,7 +38,7 @@ const ProviderActiveJob = () => {
   useEffect(() => {
     if (!job || !currentUser) return;
     
-    socketRef.current = io('http://localhost:3000', { withCredentials: true });
+    socketRef.current = io('${API_BASE_URL}', { withCredentials: true });
     
     socketRef.current.on('connect', () => {
         socketRef.current.emit('register_provider', currentUser.uid);
@@ -99,7 +100,7 @@ const ProviderActiveJob = () => {
   useEffect(() => {
     const fetchActiveJob = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/services/active-job', {
+        const response = await fetch('${API_BASE_URL}/api/services/active-job', {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
@@ -252,7 +253,7 @@ const ProviderActiveJob = () => {
               const currentLoc = providerLocationRef.current;
               if (currentLoc) {
                   try {
-                      await fetch('http://localhost:3000/api/services/provider/location', {
+                      await fetch('${API_BASE_URL}/api/services/provider/location', {
                           method: 'PUT',
                           headers: { 'Content-Type': 'application/json' },
                           credentials: 'include',
@@ -283,7 +284,7 @@ const ProviderActiveJob = () => {
   const handleStatusUpdate = async (nextStatus) => {
       console.log(`Updating status to: ${nextStatus} for job ${job?._id}`);
       try {
-        const response = await fetch(`http://localhost:3000/api/services/request/${job._id}/status`, {
+        const response = await fetch(`${API_BASE_URL}/api/services/request/${job._id}/status`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

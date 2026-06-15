@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaTimes, FaCheckCircle, FaSpinner, FaEdit } from 'react-icons/fa';
+import { API_BASE_URL } from '../utils/api';
 
 const PAYMENT_METHODS = [
     { id: 'JazzCash', label: 'JazzCash', icon: '🟠', desc: 'Mobile wallet payment' },
@@ -54,7 +55,7 @@ const PaymentModal = ({
         setPaymentError('');
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:3000/api/payments/create', {
+            const res = await fetch('${API_BASE_URL}/api/payments/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

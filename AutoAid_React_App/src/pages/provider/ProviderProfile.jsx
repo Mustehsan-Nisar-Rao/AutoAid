@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { 
     FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, 
@@ -6,6 +6,7 @@ import {
     FaBriefcase, FaCar, FaTimes, FaCamera 
 } from 'react-icons/fa';
 import { useNotification } from '../../context/NotificationContext';
+import { API_BASE_URL } from '../../utils/api';
 
 const ProviderProfile = () => {
     const { currentUser, fetchUserProfile } = useAuth();
@@ -80,7 +81,7 @@ const ProviderProfile = () => {
                 data.append('profileImage', profileImage);
             }
 
-            const response = await fetch('http://localhost:3000/api/auth/profile', {
+            const response = await fetch('${API_BASE_URL}/api/auth/profile', {
                 method: 'PUT',
                 body: data,
                 credentials: 'include'
@@ -106,7 +107,7 @@ const ProviderProfile = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return null;
         if (imagePath.startsWith('http')) return imagePath;
-        return `http://localhost:3000/${imagePath.replace(/\\/g, '/')}`;
+        return `${API_BASE_URL}/${imagePath.replace(/\\/g, '/')}`;
     };
 
     if (!currentUser) return <div className="text-white p-8">Loading...</div>;

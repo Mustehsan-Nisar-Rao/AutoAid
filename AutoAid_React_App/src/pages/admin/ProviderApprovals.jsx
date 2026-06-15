@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import AdminTable from '../../components/admin/AdminTable';
 import StatusBadge from '../../components/admin/StatusBadge';
 import { useNotification } from '../../context/NotificationContext';
+import { API_BASE_URL } from '../../utils/api';
 
 const ProviderApprovals = () => {
   const [providers, setProviders] = useState([]);
@@ -12,7 +13,7 @@ const ProviderApprovals = () => {
 
   const fetchProviders = async () => {
       try {
-          const response = await fetch('http://localhost:3000/api/admin/providers/pending', {
+          const response = await fetch('${API_BASE_URL}/api/admin/providers/pending', {
               credentials: 'include'
           });
           const data = await response.json();
@@ -32,7 +33,7 @@ const ProviderApprovals = () => {
 
   const handleStatusUpdate = async (id, status) => {
     try {
-        const response = await fetch(`http://localhost:3000/api/admin/providers/${id}/status`, {
+        const response = await fetch(`${API_BASE_URL}/api/admin/providers/${id}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -149,19 +150,19 @@ const ProviderApprovals = () => {
                               {selectedProvider.providerDetails?.profileImage && (
                                   <div>
                                       <p className="text-xs text-gray-400 mb-1">Profile Image</p>
-                                      <img src={`http://localhost:3000/${selectedProvider.providerDetails.profileImage.replace(/\\/g, '/')}`} alt="Profile" className="w-full h-40 object-cover rounded border border-white/10" />
+                                      <img src={`${API_BASE_URL}/${selectedProvider.providerDetails.profileImage.replace(/\\/g, '/')}`} alt="Profile" className="w-full h-40 object-cover rounded border border-white/10" />
                                   </div>
                               )}
                               {selectedProvider.providerDetails?.cnicImage && (
                                   <div>
                                        <p className="text-xs text-gray-400 mb-1">CNIC</p>
-                                      <img src={`http://localhost:3000/${selectedProvider.providerDetails.cnicImage.replace(/\\/g, '/')}`} alt="CNIC" className="w-full h-40 object-cover rounded border border-white/10" />
+                                      <img src={`${API_BASE_URL}/${selectedProvider.providerDetails.cnicImage.replace(/\\/g, '/')}`} alt="CNIC" className="w-full h-40 object-cover rounded border border-white/10" />
                                   </div>
                               )}
                               {selectedProvider.providerDetails?.licenseImage && (
                                   <div>
                                        <p className="text-xs text-gray-400 mb-1">License</p>
-                                      <img src={`http://localhost:3000/${selectedProvider.providerDetails.licenseImage.replace(/\\/g, '/')}`} alt="License" className="w-full h-40 object-cover rounded border border-white/10" />
+                                      <img src={`${API_BASE_URL}/${selectedProvider.providerDetails.licenseImage.replace(/\\/g, '/')}`} alt="License" className="w-full h-40 object-cover rounded border border-white/10" />
                                   </div>
                               )}
                           </div>

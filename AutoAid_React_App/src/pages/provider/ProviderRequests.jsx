@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaUser, FaCar, FaClock, FaCheck, FaTimes, FaExclamationTriangle, FaIdCard, FaBriefcase, FaTag } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '../../utils/api';
 
 const ProviderRequests = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const ProviderRequests = () => {
   // Fetch initial requests
   const fetchRequests = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/services/provider', {
+      const response = await fetch('${API_BASE_URL}/api/services/provider', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });
@@ -38,7 +39,7 @@ const ProviderRequests = () => {
     if (currentUser) {
       fetchRequests();
 
-      const socket = io('http://localhost:3000', { withCredentials: true });
+      const socket = io('${API_BASE_URL}', { withCredentials: true });
 
       socket.on('connect', () => {
         socket.emit('register_provider', currentUser.uid);
@@ -87,7 +88,7 @@ const ProviderRequests = () => {
 
   const handleAccept = async (request) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/services/request/${request._id}/status`, {
+      const response = await fetch(`${API_BASE_URL}/api/services/request/${request._id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -109,7 +110,7 @@ const ProviderRequests = () => {
 
   const handleReject = async (requestId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/services/request/${requestId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/api/services/request/${requestId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -143,7 +144,7 @@ const ProviderRequests = () => {
 
     setCounterState(prev => ({ ...prev, [requestId]: { ...prev[requestId], sending: true } }));
     try {
-      const res = await fetch(`http://localhost:3000/api/services/request/${requestId}/counter`, {
+      const res = await fetch(`${API_BASE_URL}/api/services/request/${requestId}/counter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCar } from 'react-icons/fa';
 import { MdMail, MdLock, MdPerson, MdCall } from 'react-icons/md';
@@ -6,6 +6,7 @@ import { MdMail, MdLock, MdPerson, MdCall } from 'react-icons/md';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNotification } from '../context/NotificationContext';
+import { API_BASE_URL } from '../utils/api';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -91,7 +92,7 @@ const Signup = () => {
             console.log('Firebase User Created:', user.uid);
 
             // 2. Send data to Backend
-            const response = await fetch('http://localhost:3000/api/auth/signup', {
+            const response = await fetch('${API_BASE_URL}/api/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

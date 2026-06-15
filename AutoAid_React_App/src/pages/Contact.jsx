@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { useNotification } from '../context/NotificationContext';
+import { API_BASE_URL } from '../utils/api';
 
 const Contact = () => {
     const { success, error } = useNotification();
@@ -93,7 +94,7 @@ const Contact = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:3000/api/contact', {
+            const response = await fetch('${API_BASE_URL}/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),

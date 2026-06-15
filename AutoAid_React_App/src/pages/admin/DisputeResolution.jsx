@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import AdminTable from '../../components/admin/AdminTable';
 import StatusBadge from '../../components/admin/StatusBadge';
+import { API_BASE_URL } from '../../utils/api';
 
 const DisputeResolution = () => {
   const [disputes, setDisputes] = useState([]);
@@ -11,7 +12,7 @@ const DisputeResolution = () => {
   const fetchDisputes = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3000/api/admin/disputes', {
+      const response = await fetch('${API_BASE_URL}/api/admin/disputes', {
         credentials: 'include'
       });
       const data = await response.json();
@@ -36,7 +37,7 @@ const DisputeResolution = () => {
     if (!window.confirm('Are you sure you want to mark this dispute as resolved?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/disputes/${id}/status`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/disputes/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -101,7 +102,7 @@ const DisputeResolution = () => {
                 <div className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">{dispute.description}</div>
                 {dispute.proofImage && (
                   <a 
-                    href={`http://localhost:3000/${dispute.proofImage}`} 
+                    href={`${API_BASE_URL}/${dispute.proofImage}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-[10px] text-primary hover:underline block mt-1"

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import StatCard from '../../components/admin/StatCard';
 import { FaUsers, FaTools, FaHourglassHalf, FaBalanceScale } from 'react-icons/fa';
 import { 
+import { API_BASE_URL } from '../../utils/api';
     PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip as RechartsTooltip,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/admin/stats', {
+            const response = await fetch('${API_BASE_URL}/api/admin/stats', {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -34,7 +35,7 @@ const AdminDashboard = () => {
 
     const fetchDistribution = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/admin/service-distribution?period=${period}`, {
+            const response = await fetch(`${API_BASE_URL}/api/admin/service-distribution?period=${period}`, {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -46,7 +47,7 @@ const AdminDashboard = () => {
 
     const fetchTrend = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/admin/service-trend', {
+            const response = await fetch('${API_BASE_URL}/api/admin/service-trend', {
                 credentials: 'include'
             });
             const data = await response.json();

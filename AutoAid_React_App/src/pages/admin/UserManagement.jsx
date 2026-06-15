@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import AdminTable from '../../components/admin/AdminTable';
 import StatusBadge from '../../components/admin/StatusBadge';
 import { useNotification } from '../../context/NotificationContext';
+import { API_BASE_URL } from '../../utils/api';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
       try {
-          const response = await fetch('http://localhost:3000/api/admin/users?role=provider', {
+          const response = await fetch('${API_BASE_URL}/api/admin/users?role=provider', {
               credentials: 'include'
           });
           const data = await response.json();
@@ -34,7 +35,7 @@ const UserManagement = () => {
     if (!window.confirm(`Are you sure you want to ${newStatus === 'active' ? 'activate' : 'suspend'} this user?`)) return;
 
     try {
-        const response = await fetch(`http://localhost:3000/api/admin/users/${id}/status`, {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/${id}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

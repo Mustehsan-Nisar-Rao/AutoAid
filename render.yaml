@@ -1,0 +1,44 @@
+services:
+  # ── Node.js Express + Socket.io Backend ──────────────────────────────────────
+  - type: web
+    name: autoaid-backend
+    runtime: node
+    rootDir: AutoAid_Backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000          # Render assigns this automatically; 10000 is the default
+      - key: MONGO_URI
+        sync: false           # Set this secret in Render dashboard
+      - key: JWT_SECRET
+        sync: false           # Set this secret in Render dashboard
+      - key: FIREBASE_PROJECT_ID
+        value: autoaid-auth
+      - key: EMAIL_USER
+        sync: false           # Set in Render dashboard
+      - key: EMAIL_PASS
+        sync: false           # Set in Render dashboard
+      - key: CORS_ORIGIN
+        sync: false           # Set to your Vercel URL, e.g. https://autoaid.vercel.app
+      - key: RECOMMENDER_API_URL
+        sync: false           # Set to your Python API Render URL
+
+  # ── Python FastAPI Recommender Service ────────────────────────────────────────
+  - type: web
+    name: autoaid-recommender
+    runtime: python
+    rootDir: recommender_api
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: MONGO_URI
+        sync: false           # Set this secret in Render dashboard
+      - key: MONGO_DB_NAME
+        value: autoaid
+      - key: MONGO_USERS_COLLECTION
+        value: users
+      - key: DRIVER_USER_TYPE
+        value: driver

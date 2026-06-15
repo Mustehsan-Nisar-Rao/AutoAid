@@ -16,10 +16,15 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+// Allowed origins: comma-separated list from env, or default to localhost
+const ALLOWED_ORIGINS = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:5173'];
+
 // Configure Socket.IO
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:5173',
+        origin: ALLOWED_ORIGINS,
         credentials: true
     }
 });
@@ -130,7 +135,7 @@ app.set('connectedUsers', connectedUsers);
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173', // Adjust if frontend port differs
+    origin: ALLOWED_ORIGINS,
     credentials: true
 }));
 

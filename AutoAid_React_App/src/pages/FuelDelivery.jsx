@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { FaPhone, FaGasPump, FaTint } from 'react-icons/fa';
 import CustomSelect from '../components/CustomSelect';
 import { validatePhoneNumber } from '../utils/formValidation';
+import { API_BASE_URL } from '../utils/api';
 
 const FuelDelivery = () => {
     const navigate = useNavigate();
@@ -76,7 +77,7 @@ const FuelDelivery = () => {
                 };
 
                 try {
-                    const response = await fetch('http://localhost:3000/api/services/request', {
+                    const response = await fetch('${API_BASE_URL}/api/services/request', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

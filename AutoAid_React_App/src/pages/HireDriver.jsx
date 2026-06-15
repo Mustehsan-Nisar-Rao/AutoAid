@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+﻿import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
     FaStar, FaChevronLeft, FaClock, FaLocationArrow,
@@ -15,6 +15,7 @@ import PaymentModal from '../components/PaymentModal';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { API_BASE_URL } from '../utils/api';
 
 // ─── Fix default Leaflet marker icons broken by Webpack/Vite ─────────────────
 delete L.Icon.Default.prototype._getIconUrl;
@@ -197,7 +198,7 @@ const HireDriver = () => {
         const fetchUserActiveJob = async () => {
             if (!currentUser) return;
             try {
-                const response = await fetch('http://localhost:3000/api/services/user/active-job', {
+                const response = await fetch('${API_BASE_URL}/api/services/user/active-job', {
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
                 });
@@ -252,7 +253,7 @@ const HireDriver = () => {
 
     // ── Socket.IO ─────────────────────────────────────────────────────────────
     useEffect(() => {
-        socketRef.current = io('http://localhost:3000', { withCredentials: true });
+        socketRef.current = io('${API_BASE_URL}', { withCredentials: true });
         const socket = socketRef.current;
 
         const register = () => {
@@ -365,7 +366,7 @@ const HireDriver = () => {
         setLoading(true);
         setAiError(null);
         try {
-            const res = await fetch('http://localhost:3000/api/recommend/search', {
+            const res = await fetch('${API_BASE_URL}/api/recommend/search', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -464,7 +465,7 @@ const HireDriver = () => {
         if (!requestId) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/services/request/${requestId}/status`, {
+            const response = await fetch(`${API_BASE_URL}/api/services/request/${requestId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: 'Cancelled' }),
@@ -530,7 +531,7 @@ const HireDriver = () => {
                 offeredRate: userCounterRate
             } : null;
 
-            const updateRes = await fetch(`http://localhost:3000/api/services/request/${requestId}/details`, {
+            const updateRes = await fetch(`${API_BASE_URL}/api/services/request/${requestId}/details`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -542,7 +543,7 @@ const HireDriver = () => {
             }
 
             // 2. Assign provider (+ optional negotiation payload)
-            const assignRes = await fetch('http://localhost:3000/api/services/assign', {
+            const assignRes = await fetch('${API_BASE_URL}/api/services/assign', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -574,7 +575,7 @@ const HireDriver = () => {
         // 3. Log feedback to AI model (fire-and-forget — don't block UX)
         if (interactionId) {
             const shownDriverIds = displayProviders.map(p => p.driver_id);
-            fetch('http://localhost:3000/api/recommend/feedback', {
+            fetch('${API_BASE_URL}/api/recommend/feedback', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -594,7 +595,7 @@ const HireDriver = () => {
         setCounterResponding(true);
         try {
             const res = await fetch(
-                `http://localhost:3000/api/services/request/${counterOffer.requestId}/counter/respond`,
+                `${API_BASE_URL}/api/services/request/${counterOffer.requestId}/counter/respond`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -636,7 +637,7 @@ const HireDriver = () => {
         if (ratingScore === 0) return;
         setRatingSubmitting(true);
         try {
-            await fetch(`http://localhost:3000/api/services/request/${ratingPopup.requestId}/rate`, {
+            await fetch(`${API_BASE_URL}/api/services/request/${ratingPopup.requestId}/rate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -652,7 +653,7 @@ const HireDriver = () => {
                     formData.append('lat', userLocation.lat);
                     formData.append('lng', userLocation.lng);
                 }
-                await fetch(`http://localhost:3000/api/services/request/${ratingPopup.requestId}/dispute`, {
+                await fetch(`${API_BASE_URL}/api/services/request/${ratingPopup.requestId}/dispute`, {
                     method: 'POST',
                     body: formData,
                     credentials: 'include',

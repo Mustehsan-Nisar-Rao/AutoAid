@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { FaWallet, FaCheckCircle, FaStar, FaToggleOn, FaToggleOff } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { API_BASE_URL } from '../../utils/api';
 
 const ProviderDashboard = () => {
     const { currentUser, fetchUserProfile } = useAuth();
@@ -21,7 +22,7 @@ const ProviderDashboard = () => {
 
     const fetchProviderStats = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/payments/provider/stats', {
+            const response = await fetch('${API_BASE_URL}/api/payments/provider/stats', {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -41,7 +42,7 @@ const ProviderDashboard = () => {
                 body.location = location;
             }
 
-            const response = await fetch('http://localhost:3000/api/auth/status', {
+            const response = await fetch('${API_BASE_URL}/api/auth/status', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

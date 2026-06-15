@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import AdminTable from '../../components/admin/AdminTable';
 import StatusBadge from '../../components/admin/StatusBadge';
+import { API_BASE_URL } from '../../utils/api';
 
 const AdminManagement = () => {
     const [admins, setAdmins] = useState([]);
@@ -14,7 +15,7 @@ const AdminManagement = () => {
 
     const fetchAdmins = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/admin/admins', {
+            const response = await fetch('${API_BASE_URL}/api/admin/admins', {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -38,7 +39,7 @@ const AdminManagement = () => {
         setAddLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3000/api/admin/admins', {
+            const response = await fetch('${API_BASE_URL}/api/admin/admins', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: newAdminEmail }),
@@ -65,7 +66,7 @@ const AdminManagement = () => {
         if (!window.confirm(`Are you sure you want to remove "${name}" as admin? They will be demoted to a regular user.`)) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/admin/admins/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/admin/admins/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

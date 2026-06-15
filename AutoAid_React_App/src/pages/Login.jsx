@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCar } from 'react-icons/fa';
 import { MdMail, MdLock } from 'react-icons/md';
@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { API_BASE_URL } from '../utils/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Login = () => {
             const token = await user.getIdToken(true);
 
             // 3. Verify with Backend
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const response = await fetch('${API_BASE_URL}/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

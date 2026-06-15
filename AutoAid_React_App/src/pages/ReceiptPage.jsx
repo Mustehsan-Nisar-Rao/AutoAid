@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaDownload, FaArrowLeft, FaPrint, FaHome } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../utils/api';
 
 const ReceiptPage = () => {
     const { id } = useParams();
@@ -16,7 +17,7 @@ const ReceiptPage = () => {
         const fetchPayment = async () => {
             if (!id) return;
             try {
-                const res = await fetch(`http://localhost:3000/api/payments/${id}`, {
+                const res = await fetch(`${API_BASE_URL}/api/payments/${id}`, {
                     credentials: 'include',
                 });
                 const data = await res.json();

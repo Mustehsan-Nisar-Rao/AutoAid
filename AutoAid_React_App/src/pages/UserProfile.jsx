@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { 
+import { API_BASE_URL } from '../utils/api';
     FaUserCircle, FaEnvelope, FaPhone, FaMapMarkerAlt, 
     FaStar, FaBriefcase, FaIdCard, FaCar, FaEdit, FaSave, FaTimes, FaCamera 
 } from 'react-icons/fa';
@@ -31,7 +32,7 @@ const UserProfile = () => {
         const fetchProfile = async () => {
             if (currentUser) {
                 try {
-                    const response = await fetch('http://localhost:3000/api/auth/check', {
+                    const response = await fetch('${API_BASE_URL}/api/auth/check', {
                         method: 'GET',
                         credentials: 'include',
                     });
@@ -93,7 +94,7 @@ const UserProfile = () => {
                 data.append('profileImage', profileImage);
             }
 
-            const response = await fetch('http://localhost:3000/api/auth/profile', {
+            const response = await fetch('${API_BASE_URL}/api/auth/profile', {
                 method: 'PUT',
                 body: data,
                 // credentials: 'include' is important for cookies
@@ -121,7 +122,7 @@ const UserProfile = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return null;
         if (imagePath.startsWith('http')) return imagePath;
-        return `http://localhost:3000/${imagePath.replace(/\\/g, '/')}`;
+        return `${API_BASE_URL}/${imagePath.replace(/\\/g, '/')}`;
     };
 
     if (!currentUser) {

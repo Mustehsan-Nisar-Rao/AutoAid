@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+﻿import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { API_BASE_URL } from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const fetchUserProfile = async (user) => {
         if (user) {
             try {
-                const response = await fetch('http://localhost:3000/api/auth/check', {
+                const response = await fetch('${API_BASE_URL}/api/auth/check', {
                     method: 'GET',
                     credentials: 'include',
                 });

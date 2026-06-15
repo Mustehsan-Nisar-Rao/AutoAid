@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+﻿import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaStar, FaFilter, FaChevronLeft, FaClock, FaLocationArrow, FaCheckCircle, FaTimes, FaCommentAlt, FaPaperPlane, FaCheckDouble } from 'react-icons/fa';
 import { MdMyLocation } from 'react-icons/md';
@@ -6,6 +6,7 @@ import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import PaymentModal from '../components/PaymentModal';
+import { API_BASE_URL } from '../utils/api';
 
 const NearbyProviders = () => {
     const location = useLocation();
@@ -69,7 +70,7 @@ const NearbyProviders = () => {
         const fetchUserActiveJob = async () => {
             if (!currentUser) return;
             try {
-                const response = await fetch('http://localhost:3000/api/services/user/active-job', {
+                const response = await fetch('${API_BASE_URL}/api/services/user/active-job', {
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
                 });
@@ -126,7 +127,7 @@ const NearbyProviders = () => {
     // Initialize Socket.IO connection and listeners
     useEffect(() => {
         console.log("Initializing socket connection...");
-        socketRef.current = io('http://localhost:3000', {
+        socketRef.current = io('${API_BASE_URL}', {
             withCredentials: true
         });
 
@@ -287,7 +288,7 @@ const NearbyProviders = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:3000/api/services/nearby', {
+                const response = await fetch('${API_BASE_URL}/api/services/nearby', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -388,7 +389,7 @@ const NearbyProviders = () => {
         if (!requestId) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/services/request/${requestId}/status`, {
+            const response = await fetch(`${API_BASE_URL}/api/services/request/${requestId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -441,7 +442,7 @@ const NearbyProviders = () => {
         }
         
         try {
-            const response = await fetch('http://localhost:3000/api/services/assign', {
+            const response = await fetch('${API_BASE_URL}/api/services/assign', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -899,7 +900,7 @@ const NearbyProviders = () => {
                                          setRatingSubmitting(true);
                                          try {
                                              // 1. Submit Rating
-                                             await fetch(`http://localhost:3000/api/services/request/${ratingPopup.requestId}/rate`, {
+                                             await fetch(`${API_BASE_URL}/api/services/request/${ratingPopup.requestId}/rate`, {
                                                  method: 'POST',
                                                  headers: { 'Content-Type': 'application/json' },
                                                  credentials: 'include',
@@ -923,7 +924,7 @@ const NearbyProviders = () => {
                                                      formData.append('lng', userLocation.lng);
                                                  }
 
-                                                 await fetch(`http://localhost:3000/api/services/request/${ratingPopup.requestId}/dispute`, {
+                                                 await fetch(`${API_BASE_URL}/api/services/request/${ratingPopup.requestId}/dispute`, {
                                                      method: 'POST',
                                                      body: formData,
                                                      credentials: 'include'

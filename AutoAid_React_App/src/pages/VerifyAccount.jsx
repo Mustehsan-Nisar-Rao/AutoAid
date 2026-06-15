@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaCar } from 'react-icons/fa';
 import { MdArrowBack } from 'react-icons/md';
+import { API_BASE_URL } from '../utils/api';
 
 const VerifyAccount = () => {
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ const VerifyAccount = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/auth/verify-email', {
+            const response = await fetch('${API_BASE_URL}/api/auth/verify-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

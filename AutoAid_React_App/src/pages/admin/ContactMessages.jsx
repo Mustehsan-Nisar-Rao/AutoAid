@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import AdminTable from '../../components/admin/AdminTable';
 import StatusBadge from '../../components/admin/StatusBadge';
+import { API_BASE_URL } from '../../utils/api';
 
 const ContactMessages = () => {
     const [messages, setMessages] = useState([]);
@@ -11,7 +12,7 @@ const ContactMessages = () => {
 
     const fetchMessages = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/contact', {
+            const response = await fetch('${API_BASE_URL}/api/contact', {
                 credentials: 'include'
             });
             const data = await response.json();
