@@ -161,8 +161,19 @@ exports.login = async (req, res) => {
         const decodedToken = await admin.auth().verifyIdToken(token);
         const { uid, email } = decodedToken;
 
-        // 2. Check if user exists in MongoDB
-        const user = await User.findOne({ uid });
+        // 2. Check if user exists in MongoDB (by uid first, then fallback to email)
+        let user = await User.findOne({ uid });
+
+        if (!user && email) {
+            // Fallback: find by email (handles UID mismatch after Firebase user recreation)
+            user = await User.findOne({ email });
+            if (user) {
+                // Sync the UID so future logins work by UID
+                console.log(`UID mismatch for ${email}: updating MongoDB uid from ${user.uid} to ${uid}`);
+                user.uid = uid;
+                await user.save();
+            }
+        }
 
         if (!user) {
             return res.status(404).json({ error: 'User not found in database' });
