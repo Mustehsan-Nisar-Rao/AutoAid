@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCar } from 'react-icons/fa';
 import { MdMail, MdLock, MdPerson, MdCall } from 'react-icons/md';
@@ -34,19 +34,15 @@ const Signup = () => {
         const { name, value } = e.target;
 
         if (name === 'contactNumber') {
-            // Only allow digits
             if (!/^\d*$/.test(value)) return;
-            // Limit to 11 digits
             if (value.length > 11) return;
         }
 
-        // Only allow alphabets and spaces for Full Name
         if (name === 'fullName') {
             if (!/^[a-zA-Z\s]*$/.test(value)) return;
         }
 
         setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error when user types
         if (errors[name]) {
             setErrors((prev) => ({ ...prev, [name]: '' }));
         }
@@ -56,7 +52,6 @@ const Signup = () => {
         e.preventDefault();
         const newErrors = {};
 
-        // Full Name Validation
         if (!formData.fullName.trim()) {
             newErrors.fullName = 'Full Name is required.';
         }
@@ -69,12 +64,12 @@ const Signup = () => {
             newErrors.contactNumber = 'Please enter a valid 11-digit Pakistani contact number.';
         }
 
-        if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match.';
-        }
-
         if (formData.password.length < 6) {
             newErrors.password = 'Password must be at least 6 characters.';
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match.';
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -82,14 +77,11 @@ const Signup = () => {
             return;
         }
 
-        // Proceed with signup logic here
-        console.log('Signup submitted with:', formData);
-
         try {
             // 1. Create user in Firebase (Client Side)
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            const user = userCredential.user;
-            console.log('Firebase User Created:', user.uid);
+            const firebaseUser = userCredential.user;
+            console.log('Firebase User Created:', firebaseUser.uid);
 
             // 2. Send data to Backend
             const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
@@ -99,29 +91,33 @@ const Signup = () => {
                 },
                 body: JSON.stringify({
                     ...formData,
-                    uid: user.uid // Send the UID to backend
+                    uid: firebaseUser.uid,
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Navigate to OTP verification with email
+                // Navigate to OTP verification
                 navigate('/verify-account', { state: { email: formData.email } });
             } else {
-                setErrors({ ...errors, api: data.error || 'Signup failed' });
+                // Backend rejected — delete the orphan Firebase user so same email can be retried
+                try { await firebaseUser.delete(); } catch (_) {}
+                console.warn('Backend rejected signup, Firebase user cleaned up.');
+                setErrors({ ...errors, api: data.error || 'Signup failed. Please try again.' });
             }
-        } catch (error) {
-            console.error('Signup error:', error);
-            let errorMessage = 'Network error. Please try again.';
-            if (error.code === 'auth/email-already-in-use') {
-                errorMessage = 'Email is already in use.';
-            } else if (error.code === 'auth/weak-password') {
-                errorMessage = 'Password is too weak.';
+        } catch (err) {
+            console.error('Signup error:', err);
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+            if (err.code === 'auth/email-already-in-use') {
+                errorMessage = 'This email is already registered. Please log in or use a different email.';
+            } else if (err.code === 'auth/weak-password') {
+                errorMessage = 'Password is too weak. Use at least 6 characters.';
+            } else if (err.code === 'auth/network-request-failed') {
+                errorMessage = 'Network error. Please check your internet connection and try again.';
             }
-            setErrors({ ...errors, api: errorMessage });
-            // Temporary: Notify the actual error for debugging
-            error(`Debug Error: ${error.message}`);
+            setErrors((prev) => ({ ...prev, api: errorMessage }));
+            error(errorMessage);
         }
     };
 
@@ -189,8 +185,7 @@ const Signup = () => {
                                         <MdMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-subtle-dark pointer-events-none text-xl" />
                                         <input
                                             autoComplete="email"
-                                            className={`block w-full pl-10 pr-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-border-dark'
-                                                } rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300`}
+                                            className={`block w-full pl-10 pr-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-border-dark'} rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300`}
                                             id="email"
                                             name="email"
                                             placeholder="you@example.com"
@@ -250,8 +245,7 @@ const Signup = () => {
                                         <MdLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-subtle-dark pointer-events-none text-xl" />
                                         <input
                                             autoComplete="new-password"
-                                            className={`block w-full pl-10 pr-3 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-border-dark'
-                                                } rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300`}
+                                            className={`block w-full pl-10 pr-3 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-border-dark'} rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300`}
                                             id="confirmPassword"
                                             name="confirmPassword"
                                             placeholder="••••••••"
