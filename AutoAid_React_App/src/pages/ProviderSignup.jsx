@@ -88,10 +88,11 @@ const ProviderSignup = () => {
             return;
         }
 
+        let firebaseUser = null;
         try {
             // 1. Create user in Firebase
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            const firebaseUser = userCredential.user;
+            firebaseUser = userCredential.user;
             console.log('Firebase User Created:', firebaseUser.uid);
 
             // 2. Prepare FormData
@@ -130,6 +131,11 @@ const ProviderSignup = () => {
 
         } catch (err) {
             console.error("Signup Error:", err);
+            // Delete orphan Firebase user if signup call threw an exception/timeout
+            if (firebaseUser) {
+                try { await firebaseUser.delete(); } catch (_) {}
+                console.warn('Backend request timed out or failed, Firebase user cleaned up.');
+            }
             if (err.code === 'auth/email-already-in-use') {
                 error('This email is already registered. Please log in or use a different email.');
             } else if (err.code === 'auth/weak-password') {

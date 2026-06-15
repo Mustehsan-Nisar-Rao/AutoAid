@@ -85,10 +85,11 @@ const Signup = () => {
         }
 
         setLoading(true);
+        let firebaseUser = null;
         try {
             // 1. Create user in Firebase (Client Side)
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            const firebaseUser = userCredential.user;
+            firebaseUser = userCredential.user;
             console.log('Firebase User Created:', firebaseUser.uid);
 
             // 2. Send data to Backend
@@ -116,6 +117,11 @@ const Signup = () => {
             }
         } catch (err) {
             console.error('Signup error:', err);
+            // Delete orphan Firebase user if signup call threw an exception/timeout
+            if (firebaseUser) {
+                try { await firebaseUser.delete(); } catch (_) {}
+                console.warn('Backend request timed out or failed, Firebase user cleaned up.');
+            }
             let errorMessage = 'An unexpected error occurred. Please try again.';
             if (err.code === 'auth/email-already-in-use') {
                 errorMessage = 'This email is already registered. Please log in or use a different email.';
