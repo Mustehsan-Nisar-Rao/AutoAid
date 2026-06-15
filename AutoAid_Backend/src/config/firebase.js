@@ -9,22 +9,27 @@ dotenv.config();
 // or use environment variables to initialize the app.
 
 try {
-  // Option 1: Using a service account file
-  // const serviceAccount = require('../../serviceAccountKey.json');
-  // admin.initializeApp({
-  //   credential: admin.credential.cert(serviceAccount)
-  // });
-
-  // Option 2: Using environment variables (Mock for now if not present)
-  if (process.env.FIREBASE_PROJECT_ID) {
+  // Option 1: Initializing using individual service account env vars
+  if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+      admin.initializeApp({
+          credential: admin.credential.cert({
+              projectId: process.env.FIREBASE_PROJECT_ID,
+              clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+              // Replace escaped newlines with actual newlines in private key
+              privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+          })
+      });
+      console.log('Firebase Admin Initialized via env cert credentials');
+  } 
+  // Option 2: Fallback to applicationDefault (e.g. locally with GOOGLE_APPLICATION_CREDENTIALS)
+  else if (process.env.FIREBASE_PROJECT_ID) {
       admin.initializeApp({
           credential: admin.credential.applicationDefault(),
           projectId: process.env.FIREBASE_PROJECT_ID
       });
-      console.log('Firebase Admin Initialized');
+      console.log('Firebase Admin Initialized via applicationDefault');
   } else {
       console.warn('Firebase credentials not found. Firebase features will not work.');
-      // Initialize with mock for testing if needed, or just fail gracefully
   }
 
 } catch (error) {

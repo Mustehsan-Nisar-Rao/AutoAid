@@ -179,10 +179,12 @@ exports.login = async (req, res) => {
         });
 
         // 5. Set Cookie
+        const isProd = process.env.NODE_ENV === 'production' || (req.get('origin') && !req.get('origin').includes('localhost'));
         const options = {
             expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
             httpOnly: true,
-            // secure: true, // Enable in production with HTTPS
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax'
         };
 
         res.status(200)
@@ -210,9 +212,12 @@ exports.login = async (req, res) => {
 // @route   POST /api/auth/logout
 // @access  Public
 exports.logout = (req, res) => {
+    const isProd = process.env.NODE_ENV === 'production' || (req.get('origin') && !req.get('origin').includes('localhost'));
     res.cookie('token', 'none', {
         expires: new Date(Date.now() + 10 * 1000),
         httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax'
     });
     res.status(200).json({ success: true, message: 'User logged out' });
 };
