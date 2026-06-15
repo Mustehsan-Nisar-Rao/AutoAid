@@ -9,7 +9,7 @@ const ProviderHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch('${API_BASE_URL}/api/services/provider', {
+        const response = await fetch(`${API_BASE_URL}/api/services/provider`, {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });

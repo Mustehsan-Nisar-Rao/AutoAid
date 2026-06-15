@@ -22,7 +22,7 @@ const ProviderDashboard = () => {
 
     const fetchProviderStats = async () => {
         try {
-            const response = await fetch('${API_BASE_URL}/api/payments/provider/stats', {
+            const response = await fetch(`${API_BASE_URL}/api/payments/provider/stats`, {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -42,7 +42,7 @@ const ProviderDashboard = () => {
                 body.location = location;
             }
 
-            const response = await fetch('${API_BASE_URL}/api/auth/status', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

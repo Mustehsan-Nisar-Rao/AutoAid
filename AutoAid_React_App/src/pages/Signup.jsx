@@ -92,7 +92,7 @@ const Signup = () => {
             console.log('Firebase User Created:', user.uid);
 
             // 2. Send data to Backend
-            const response = await fetch('${API_BASE_URL}/api/auth/signup', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

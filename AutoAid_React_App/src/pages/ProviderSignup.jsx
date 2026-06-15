@@ -112,7 +112,7 @@ const ProviderSignup = () => {
             });
 
             // 3. Send to Backend
-            const response = await fetch('${API_BASE_URL}/api/auth/signup', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 body: data, // No Content-Type header needed for FormData
             });

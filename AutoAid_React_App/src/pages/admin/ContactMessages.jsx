@@ -12,7 +12,7 @@ const ContactMessages = () => {
 
     const fetchMessages = async () => {
         try {
-            const response = await fetch('${API_BASE_URL}/api/contact', {
+            const response = await fetch(`${API_BASE_URL}/api/contact`, {
                 credentials: 'include'
             });
             const data = await response.json();

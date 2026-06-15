@@ -32,7 +32,7 @@ const UserProfile = () => {
         const fetchProfile = async () => {
             if (currentUser) {
                 try {
-                    const response = await fetch('${API_BASE_URL}/api/auth/check', {
+                    const response = await fetch(`${API_BASE_URL}/api/auth/check`, {
                         method: 'GET',
                         credentials: 'include',
                     });
@@ -94,7 +94,7 @@ const UserProfile = () => {
                 data.append('profileImage', profileImage);
             }
 
-            const response = await fetch('${API_BASE_URL}/api/auth/profile', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
                 method: 'PUT',
                 body: data,
                 // credentials: 'include' is important for cookies

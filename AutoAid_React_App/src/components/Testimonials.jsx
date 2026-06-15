@@ -30,7 +30,7 @@ const Testimonials = () => {
     useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const response = await fetch('${API_BASE_URL}/api/services/testimonials');
+                const response = await fetch(`${API_BASE_URL}/api/services/testimonials`);
                 const data = await response.json();
                 if (data.success && data.testimonials && data.testimonials.length > 0) {
                     setTestimonials(data.testimonials);

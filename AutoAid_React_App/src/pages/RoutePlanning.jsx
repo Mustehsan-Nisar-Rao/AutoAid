@@ -165,7 +165,7 @@ const RoutePlanning = () => {
             setEndCoords(endC);
 
             // 2. Fetch NHA Alerts from Backend
-            const response = await fetch('${API_BASE_URL}/api/nha/route-check', {
+            const response = await fetch(`${API_BASE_URL}/api/nha/route-check`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

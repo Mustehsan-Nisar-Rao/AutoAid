@@ -81,7 +81,7 @@ const ProviderProfile = () => {
                 data.append('profileImage', profileImage);
             }
 
-            const response = await fetch('${API_BASE_URL}/api/auth/profile', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
                 method: 'PUT',
                 body: data,
                 credentials: 'include'

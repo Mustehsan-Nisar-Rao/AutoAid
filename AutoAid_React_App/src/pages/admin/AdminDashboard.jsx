@@ -23,7 +23,7 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('${API_BASE_URL}/api/admin/stats', {
+            const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
 
     const fetchTrend = async () => {
         try {
-            const response = await fetch('${API_BASE_URL}/api/admin/service-trend', {
+            const response = await fetch(`${API_BASE_URL}/api/admin/service-trend`, {
                 credentials: 'include'
             });
             const data = await response.json();

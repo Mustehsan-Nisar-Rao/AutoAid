@@ -55,7 +55,7 @@ const PaymentModal = ({
         setPaymentError('');
         setLoading(true);
         try {
-            const res = await fetch('${API_BASE_URL}/api/payments/create', {
+            const res = await fetch(`${API_BASE_URL}/api/payments/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

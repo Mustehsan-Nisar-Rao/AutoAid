@@ -18,7 +18,7 @@ const ProviderRequests = () => {
   // Fetch initial requests
   const fetchRequests = async () => {
     try {
-      const response = await fetch('${API_BASE_URL}/api/services/provider', {
+      const response = await fetch(`${API_BASE_URL}/api/services/provider`, {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });
@@ -39,7 +39,7 @@ const ProviderRequests = () => {
     if (currentUser) {
       fetchRequests();
 
-      const socket = io('${API_BASE_URL}', { withCredentials: true });
+      const socket = io(`${API_BASE_URL}`, { withCredentials: true });
 
       socket.on('connect', () => {
         socket.emit('register_provider', currentUser.uid);

@@ -77,7 +77,7 @@ const FuelDelivery = () => {
                 };
 
                 try {
-                    const response = await fetch('${API_BASE_URL}/api/services/request', {
+                    const response = await fetch(`${API_BASE_URL}/api/services/request`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

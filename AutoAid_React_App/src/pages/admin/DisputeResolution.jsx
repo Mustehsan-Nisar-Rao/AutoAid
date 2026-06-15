@@ -12,7 +12,7 @@ const DisputeResolution = () => {
   const fetchDisputes = async () => {
     try {
       setLoading(true);
-      const response = await fetch('${API_BASE_URL}/api/admin/disputes', {
+      const response = await fetch(`${API_BASE_URL}/api/admin/disputes`, {
         credentials: 'include'
       });
       const data = await response.json();

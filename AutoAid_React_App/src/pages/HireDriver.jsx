@@ -198,7 +198,7 @@ const HireDriver = () => {
         const fetchUserActiveJob = async () => {
             if (!currentUser) return;
             try {
-                const response = await fetch('${API_BASE_URL}/api/services/user/active-job', {
+                const response = await fetch(`${API_BASE_URL}/api/services/user/active-job`, {
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
                 });
@@ -253,7 +253,7 @@ const HireDriver = () => {
 
     // ── Socket.IO ─────────────────────────────────────────────────────────────
     useEffect(() => {
-        socketRef.current = io('${API_BASE_URL}', { withCredentials: true });
+        socketRef.current = io(`${API_BASE_URL}`, { withCredentials: true });
         const socket = socketRef.current;
 
         const register = () => {
@@ -366,7 +366,7 @@ const HireDriver = () => {
         setLoading(true);
         setAiError(null);
         try {
-            const res = await fetch('${API_BASE_URL}/api/recommend/search', {
+            const res = await fetch(`${API_BASE_URL}/api/recommend/search`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -543,7 +543,7 @@ const HireDriver = () => {
             }
 
             // 2. Assign provider (+ optional negotiation payload)
-            const assignRes = await fetch('${API_BASE_URL}/api/services/assign', {
+            const assignRes = await fetch(`${API_BASE_URL}/api/services/assign`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -575,7 +575,7 @@ const HireDriver = () => {
         // 3. Log feedback to AI model (fire-and-forget — don't block UX)
         if (interactionId) {
             const shownDriverIds = displayProviders.map(p => p.driver_id);
-            fetch('${API_BASE_URL}/api/recommend/feedback', {
+            fetch(`${API_BASE_URL}/api/recommend/feedback`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

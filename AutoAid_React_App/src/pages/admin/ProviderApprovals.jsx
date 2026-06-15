@@ -13,7 +13,7 @@ const ProviderApprovals = () => {
 
   const fetchProviders = async () => {
       try {
-          const response = await fetch('${API_BASE_URL}/api/admin/providers/pending', {
+          const response = await fetch(`${API_BASE_URL}/api/admin/providers/pending`, {
               credentials: 'include'
           });
           const data = await response.json();

@@ -70,7 +70,7 @@ const NearbyProviders = () => {
         const fetchUserActiveJob = async () => {
             if (!currentUser) return;
             try {
-                const response = await fetch('${API_BASE_URL}/api/services/user/active-job', {
+                const response = await fetch(`${API_BASE_URL}/api/services/user/active-job`, {
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
                 });
@@ -127,7 +127,7 @@ const NearbyProviders = () => {
     // Initialize Socket.IO connection and listeners
     useEffect(() => {
         console.log("Initializing socket connection...");
-        socketRef.current = io('${API_BASE_URL}', {
+        socketRef.current = io(`${API_BASE_URL}`, {
             withCredentials: true
         });
 
@@ -288,7 +288,7 @@ const NearbyProviders = () => {
             }
 
             try {
-                const response = await fetch('${API_BASE_URL}/api/services/nearby', {
+                const response = await fetch(`${API_BASE_URL}/api/services/nearby`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -442,7 +442,7 @@ const NearbyProviders = () => {
         }
         
         try {
-            const response = await fetch('${API_BASE_URL}/api/services/assign', {
+            const response = await fetch(`${API_BASE_URL}/api/services/assign`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

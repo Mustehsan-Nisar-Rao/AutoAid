@@ -38,7 +38,7 @@ const ProviderActiveJob = () => {
   useEffect(() => {
     if (!job || !currentUser) return;
     
-    socketRef.current = io('${API_BASE_URL}', { withCredentials: true });
+    socketRef.current = io(`${API_BASE_URL}`, { withCredentials: true });
     
     socketRef.current.on('connect', () => {
         socketRef.current.emit('register_provider', currentUser.uid);
@@ -100,7 +100,7 @@ const ProviderActiveJob = () => {
   useEffect(() => {
     const fetchActiveJob = async () => {
       try {
-        const response = await fetch('${API_BASE_URL}/api/services/active-job', {
+        const response = await fetch(`${API_BASE_URL}/api/services/active-job`, {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
@@ -253,7 +253,7 @@ const ProviderActiveJob = () => {
               const currentLoc = providerLocationRef.current;
               if (currentLoc) {
                   try {
-                      await fetch('${API_BASE_URL}/api/services/provider/location', {
+                      await fetch(`${API_BASE_URL}/api/services/provider/location`, {
                           method: 'PUT',
                           headers: { 'Content-Type': 'application/json' },
                           credentials: 'include',

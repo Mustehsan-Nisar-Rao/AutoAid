@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const fetchUserProfile = async (user) => {
         if (user) {
             try {
-                const response = await fetch('${API_BASE_URL}/api/auth/check', {
+                const response = await fetch(`${API_BASE_URL}/api/auth/check`, {
                     method: 'GET',
                     credentials: 'include',
                 });

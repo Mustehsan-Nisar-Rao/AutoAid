@@ -15,7 +15,7 @@ const AdminManagement = () => {
 
     const fetchAdmins = async () => {
         try {
-            const response = await fetch('${API_BASE_URL}/api/admin/admins', {
+            const response = await fetch(`${API_BASE_URL}/api/admin/admins`, {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -39,7 +39,7 @@ const AdminManagement = () => {
         setAddLoading(true);
 
         try {
-            const response = await fetch('${API_BASE_URL}/api/admin/admins', {
+            const response = await fetch(`${API_BASE_URL}/api/admin/admins`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: newAdminEmail }),
