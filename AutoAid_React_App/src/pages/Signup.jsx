@@ -19,6 +19,13 @@ const Signup = () => {
         confirmPassword: '',
     });
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    // Pre-warm the Render backend when page loads (avoids cold-start delay on submit)
+    React.useEffect(() => {
+        fetch(`${API_BASE_URL}/api/auth/check`, { method: 'GET', credentials: 'include' })
+            .catch(() => {}); // Ignore errors — just waking the server
+    }, []);
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -77,6 +84,7 @@ const Signup = () => {
             return;
         }
 
+        setLoading(true);
         try {
             // 1. Create user in Firebase (Client Side)
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
@@ -118,6 +126,8 @@ const Signup = () => {
             }
             setErrors((prev) => ({ ...prev, api: errorMessage }));
             error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -260,10 +270,19 @@ const Signup = () => {
                                 <div className="pt-2">
                                     {errors.api && <p className="text-sm text-red-500 text-center mb-2">{errors.api}</p>}
                                     <button
-                                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-background-dark bg-primary hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-dark focus:ring-primary transition-colors duration-200"
+                                        className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-background-dark bg-primary hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-dark focus:ring-primary transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                                         type="submit"
+                                        disabled={loading}
                                     >
-                                        Continue
+                                        {loading ? (
+                                            <>
+                                                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                                </svg>
+                                                Creating account...
+                                            </>
+                                        ) : 'Continue'}
                                     </button>
                                 </div>
                             </form>

@@ -19,14 +19,8 @@ const sendEmail = async (to, subject, html) => {
     html: html,
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Email sent to ${to}`);
-  } catch (error) {
-    console.error('Error sending email:', error);
-    // Don't throw error to avoid crashing the request if email fails, just log it.
-    // Or return false.
-  }
+  await transporter.sendMail(mailOptions);
+  console.log(`Email sent to ${to}`);
 };
 
 const sendOtpEmail = async (email, otp) => {
