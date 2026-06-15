@@ -1,10 +1,10 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { 
-import { API_BASE_URL } from '../utils/api';
     FaUserCircle, FaEnvelope, FaPhone, FaMapMarkerAlt, 
     FaStar, FaBriefcase, FaIdCard, FaCar, FaEdit, FaSave, FaTimes, FaCamera 
 } from 'react-icons/fa';
+import { API_BASE_URL } from '../utils/api';
 
 const UserProfile = () => {
     const { currentUser, fetchUserProfile } = useAuth();
