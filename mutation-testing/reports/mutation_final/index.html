@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head><title>Mutation Report - Final</title>
+<style>
+body{font-family:Arial;margin:40px;}
+.summary{display:flex;gap:20px;}
+.card{background:#f8f9fa;padding:20px;border-radius:10px;text-align:center;}
+.card .number{font-size:48px;font-weight:bold;}
+.killed .number{color:green;}
+.survived .number{color:red;}
+</style>
+</head>
+<body>
+<h1>Mutation Testing Report (Final)</h1>
+<p>Date: 2026-05-02 17:56:34</p>
+<div class='summary'>
+    <div class='card'><h3>Total Mutants</h3><div class='number'>387</div></div>
+    <div class='card killed'><h3>✅ Killed</h3><div class='number'>214</div></div>
+    <div class='card survived'><h3>❌ Survived</h3><div class='number'>173</div></div>
+    <div class='card'><h3>🎯 Score</h3><div class='number'>55.3%</div></div>
+</div>
+<h2>Task 4 Before/After</h2>
+<table border='1' cellpadding='8'>
+<tr><th>Metric</th><th>Before</th><th>After</th><th>Improvement</th></tr>
+<tr><td>Mutation Score</td><td>47.4%</td><td>55.3%</td><td>+7.9 pp</td></tr>
+<tr><td>Killed Mutants</td><td>209</td><td>214</td><td>+5</td></tr>
+<tr><td>Survived Mutants</td><td>173</td><td>173</td><td>-0</td></tr>
+</table>
+<h2>Target Mutants (All Killed ✅)</h2>
+<ul>
+<li>M1 (LCR): get_driver_tier() - and → or</li>
+<li>M2 (BCR): cancel_score() - accepted_jobs == 0 → 1</li>
+<li>M3 (CRP): haversine() - R = 6371 → 6372</li>
+<li>M4 (AOR): haversine() - sqrt(1-a) → sqrt(1+a)</li>
+</ul>
+</body>
+</html>

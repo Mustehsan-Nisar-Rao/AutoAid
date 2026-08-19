@@ -1,0 +1,11 @@
+# pipeline.features.x_cancel_score__mutmut_2: killed
+--- pipeline/features.py
++++ pipeline/features.py
+@@ -1,6 +1,6 @@
+ def cancel_score(cancellations, accepted_jobs):
+     """Reliability score: 1.0 = never cancels, 0.0 = always cancels."""
+-    if accepted_jobs == 0:
++    if accepted_jobs == 1:
+         return 1.0
+     cancel_rate = cancellations / max(accepted_jobs, 1)
+     return 1.0 - cancel_rate

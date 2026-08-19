@@ -1,0 +1,437 @@
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Otp = require('../models/Otp');
+const { sendOtpEmail } = require('../config/email');
+
+// @desc    Register a new user
+// @route   POST /api/auth/signup
+// @access  Public
+exports.signup = async (req, res) => {
+  const { email, password, fullName, contactNumber, role } = req.body;
+
+  try {
+    // Check if user already exists in MongoDB
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        return res.status(400).json({ error: 'User already exists' });
+    }
+
+    if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    // Extract Provider Details if role is provider
+    let providerDetails = {};
+    if (role === 'provider') {
+        providerDetails = {
+            serviceType: req.body.serviceType,
+            age: req.body.age,
+            dob: req.body.dob,
+            gender: req.body.gender,
+            profileImage: req.files['profileImage'] ? req.files['profileImage'][0].path : null,
+            cnicImage: req.files['cnicImage'] ? req.files['cnicImage'][0].path : null,
+            licenseImage: req.files['licenseImage'] ? req.files['licenseImage'][0].path : null,
+            vehicleDetails: {
+                number: req.body.towingVehicleNumber,
+                make: req.body.towingMake,
+                model: req.body.towingModel
+            }
+        };
+        // Save charges per hour for temporary drivers, breakdown, towing, lockout
+        if (['temporary-driver', 'breakdown-assistance', 'towing-service', 'lockout-assistance'].includes(req.body.serviceType) && req.body.chargesPerHour) {
+            const cph = parseInt(req.body.chargesPerHour, 10);
+            if (cph >= 200 && cph <= 1000) {
+                providerDetails.chargesPerHour = cph;
+            }
+        }
+        // Save fuel prices for fuel providers
+        if (req.body.serviceType === 'fuel-provider') {
+            if (req.body.petrolPrice) providerDetails.petrolPrice = parseFloat(req.body.petrolPrice);
+            if (req.body.dieselPrice) providerDetails.dieselPrice = parseFloat(req.body.dieselPrice);
+        }
+    }
+
+    // Generate OTP
+    const otpValue = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP with temporary user data (including plain password — it will be hashed when User is created)
+    await Otp.create({
+        email: email,
+        otp: otpValue,
+        userData: {
+            password,
+            fullName,
+            contactNumber,
+            role: role || 'user',
+            providerDetails: role === 'provider' ? providerDetails : undefined
+        }
+    });
+
+    // Send OTP via Email
+    await sendOtpEmail(email, otpValue);
+
+    res.status(201).json({
+      success: true,
+      message: 'OTP sent. Please verify your email.',
+      email: email
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server Error: ' + error.message });
+  }
+};
+
+// @desc    Verify Email OTP
+// @route   POST /api/auth/verify-email
+// @access  Public
+exports.verifyEmail = async (req, res) => {
+    const { email, otp } = req.body;
+
+    try {
+        // Find OTP
+        const otpRecord = await Otp.findOne({ email, otp });
+
+        if (!otpRecord) {
+            return res.status(400).json({ error: 'Invalid or expired OTP' });
+        }
+
+        // Create User from stored data
+        const { password, fullName, contactNumber, role, providerDetails } = otpRecord.userData;
+
+        // Double check if user already exists (idempotency)
+        let user = await User.findOne({ email });
+        if (!user) {
+            user = await User.create({
+                email,
+                password, // Will be hashed by the pre-save hook
+                fullName,
+                contactNumber,
+                role,
+                isVerified: true,
+                status: role === 'provider' ? 'pending' : 'active',
+                isAdminApproved: false,
+                providerDetails: providerDetails
+            });
+        } else {
+             // If user exists but was unverified (edge case), just update
+             user.isVerified = true;
+             if (role === 'provider') {
+                 user.status = 'pending';
+                 user.isAdminApproved = false;
+             }
+             if (providerDetails) user.providerDetails = providerDetails;
+             await user.save();
+        }
+
+        // Delete OTP
+        await Otp.deleteOne({ _id: otpRecord._id });
+
+        res.status(200).json({
+            success: true,
+            message: role === 'provider' ? 'Email verified. Account pending approval.' : 'Email verified and account created successfully',
+            user: {
+                _id: user._id,
+                email: user.email,
+                fullName: user.fullName,
+                isVerified: user.isVerified,
+                role: user.role,
+                status: user.status,
+                isAvailable: user.isAvailable
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error: ' + error.message });
+    }
+};
+
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Please provide email and password' });
+        }
+
+        // Find user by email and include password for comparison
+        const user = await User.findOne({ email }).select('+password');
+
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        // Check if password matches
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        // Check if email is verified
+        if (!user.isVerified) {
+            return res.status(403).json({ error: 'Please verify your email first' });
+        }
+
+        // Check Status
+        if (user.status === 'suspended') {
+            return res.status(403).json({ error: 'Account suspended. Please contact support.' });
+        }
+
+        // Generate JWT
+        const jwtToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: '30d'
+        });
+
+        // Set Cookie
+        const isProd = process.env.NODE_ENV === 'production' || (req.get('origin') && !req.get('origin').includes('localhost'));
+        const options = {
+            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax'
+        };
+
+        res.status(200)
+            .cookie('token', jwtToken, options)
+            .json({
+                success: true,
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                    fullName: user.fullName,
+                    role: user.role,
+                    status: user.status,
+                    isAvailable: user.isAvailable,
+                    currentLocation: user.currentLocation,
+                    providerDetails: user.providerDetails
+                }
+            });
+    } catch (error) {
+        console.error('Login Error:', error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// @desc    Logout user / clear cookie
+// @route   POST /api/auth/logout
+// @access  Public
+exports.logout = (req, res) => {
+    const isProd = process.env.NODE_ENV === 'production' || (req.get('origin') && !req.get('origin').includes('localhost'));
+    res.cookie('token', 'none', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax'
+    });
+    res.status(200).json({ success: true, message: 'User logged out' });
+};
+
+// @desc    Forgot password — sends OTP to email
+// @route   POST /api/auth/forgot-password
+// @access  Public
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: 'No user found with this email address' });
+        }
+
+        // Generate OTP
+        const otpValue = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Delete any existing OTPs for this email
+        await Otp.deleteMany({ email });
+
+        // Save OTP (no userData needed, just the otp for password reset)
+        await Otp.create({
+            email,
+            otp: otpValue,
+            userData: {} // Empty — this is just for password reset
+        });
+
+        // Send OTP via Email
+        await sendOtpEmail(email, otpValue);
+
+        res.status(200).json({
+            success: true,
+            message: 'Password reset OTP sent to your email'
+        });
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// @desc    Reset password using OTP
+// @route   POST /api/auth/reset-password
+// @access  Public
+exports.resetPassword = async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+
+    try {
+        if (!newPassword || newPassword.length < 6) {
+            return res.status(400).json({ error: 'Password must be at least 6 characters' });
+        }
+
+        // Verify OTP
+        const otpRecord = await Otp.findOne({ email, otp });
+        if (!otpRecord) {
+            return res.status(400).json({ error: 'Invalid or expired OTP' });
+        }
+
+        // Find user and update password
+        const user = await User.findOne({ email }).select('+password');
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        user.password = newPassword; // Will be hashed by pre-save hook
+        await user.save();
+
+        // Delete OTP
+        await Otp.deleteOne({ _id: otpRecord._id });
+
+        res.status(200).json({
+            success: true,
+            message: 'Password reset successfully. You can now log in with your new password.'
+        });
+    } catch (error) {
+        console.error('Reset password error:', error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+exports.updateProfile = async (req, res) => {
+    try {
+        const { 
+            fullName, 
+            contactNumber, 
+            location, 
+            services, 
+            bio, 
+            age, 
+            gender, 
+            chargesPerHour, 
+            vehicleNumber, 
+            vehicleMake, 
+            vehicleModel,
+            petrolPrice,
+            dieselPrice
+        } = req.body;
+        
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+
+        // Update fields if provided
+        if (fullName) user.fullName = fullName;
+        if (contactNumber) user.contactNumber = contactNumber;
+        if (location) user.location = location;
+        
+        // Update profile image if uploaded
+        if (req.file) {
+            user.providerDetails.profileImage = req.file.path;
+        }
+        
+        // Update provider specific details
+        if (user.role === 'provider') {
+            if (!user.providerDetails) {
+                user.providerDetails = {};
+            }
+
+            if (services) {
+                if (Array.isArray(services)) {
+                     user.providerDetails.serviceType = services.join(', '); 
+                } else {
+                    user.providerDetails.serviceType = services;
+                }
+            }
+
+            if (age) user.providerDetails.age = parseInt(age, 10);
+            if (gender) user.providerDetails.gender = gender;
+            
+            if (chargesPerHour) {
+                const cph = parseInt(chargesPerHour, 10);
+                if (cph >= 200 && cph <= 1000) {
+                    user.providerDetails.chargesPerHour = cph;
+                }
+            }
+
+            // Update Fuel Prices
+            if (petrolPrice) user.providerDetails.petrolPrice = parseFloat(petrolPrice);
+            if (dieselPrice) user.providerDetails.dieselPrice = parseFloat(dieselPrice);
+
+            // Update Vehicle Details
+            if (vehicleNumber || vehicleMake || vehicleModel) {
+                if (!user.providerDetails.vehicleDetails) {
+                    user.providerDetails.vehicleDetails = {};
+                }
+                if (vehicleNumber) user.providerDetails.vehicleDetails.number = vehicleNumber;
+                if (vehicleMake) user.providerDetails.vehicleDetails.make = vehicleMake;
+                if (vehicleModel) user.providerDetails.vehicleDetails.model = vehicleModel;
+            }
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            user: user
+        });
+
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({ success: false, error: 'Server Error' });
+    }
+};
+
+// @desc    Update provider status and location
+// @route   PUT /api/auth/status
+// @access  Private
+exports.updateStatus = async (req, res) => {
+    try {
+        const { isAvailable, location } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+
+        if (typeof isAvailable !== 'undefined') {
+            user.isAvailable = isAvailable;
+        }
+
+        if (location) {
+            user.currentLocation = {
+                lat: location.lat,
+                lng: location.lng
+            };
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            user: {
+                id: user._id, 
+                isAvailable: user.isAvailable,
+                currentLocation: user.currentLocation
+            }
+        });
+
+    } catch (error) {
+        console.error('Update status error:', error);
+        res.status(500).json({ success: false, error: 'Server Error' });
+    }
+};

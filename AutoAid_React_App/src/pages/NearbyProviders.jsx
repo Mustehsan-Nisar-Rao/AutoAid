@@ -1,0 +1,1131 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaStar, FaFilter, FaChevronLeft, FaClock, FaLocationArrow, FaCheckCircle, FaTimes, FaCommentAlt, FaPaperPlane, FaCheckDouble } from 'react-icons/fa';
+import { MdMyLocation } from 'react-icons/md';
+import { io } from 'socket.io-client';
+import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
+import PaymentModal from '../components/PaymentModal';
+import { API_BASE_URL } from '../utils/api';
+
+const NearbyProviders = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { currentUser } = useAuth();
+    const { success, error, info, warn } = useNotification();
+    const serviceType = location.state?.serviceType || 'Service';
+    const userLocation = location.state?.userLocation;
+    const requestId = location.state?.requestId;
+    const fuelType = location.state?.fuelType;
+    const quantity = location.state?.quantity;
+    const [searchRadius, setSearchRadius] = useState(50);
+    const [providers, setProviders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedProvider, setSelectedProvider] = useState(null);
+    const mapRef = useRef(null);
+    const mapInstanceRef = useRef(null);
+    const markersRef = useRef([]);
+    const infoWindowRef = useRef(null);
+    const socketRef = useRef(null);
+    const selectedProviderRef = useRef(null);
+
+    // Sync selectedProviderRef with state
+    useEffect(() => {
+        selectedProviderRef.current = selectedProvider;
+    }, [selectedProvider]);
+
+    // Rating popup state
+    const [ratingPopup, setRatingPopup] = useState(null); // { requestId, providerName, serviceType }
+    const [ratingScore, setRatingScore] = useState(0);
+    const [ratingComment, setRatingComment] = useState('');
+    const [hoveredStar, setHoveredStar] = useState(0);
+    const [showIssueReport, setShowIssueReport] = useState(false);
+    const [issueReport, setIssueReport] = useState('');
+    const [disputeReason, setDisputeReason] = useState('Late arrival');
+    const [disputeFile, setDisputeFile] = useState(null);
+    const [ratingSubmitting, setRatingSubmitting] = useState(false);
+    const [ratingDone, setRatingDone] = useState(false);
+
+    // Payment modal state
+    const [paymentModal, setPaymentModal] = useState(null); // { requestId, providerName, serviceType, amount }
+    
+    // Timeout/Countdown state
+    const [requestCountdown, setRequestCountdown] = useState(0);
+    const [isWaitingForProvider, setIsWaitingForProvider] = useState(false);
+    const [activeRequestProvider, setActiveRequestProvider] = useState(null);
+    const countdownIntervalRef = useRef(null);
+
+    // Chat and Active Job states
+    const [activeJob, setActiveJob] = useState(null);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const chatEndRef = useRef(null);
+    const activeJobRef = useRef(null);
+    // Stores the last requested provider so we can access chargesPerHour on job_completed
+    const providerDataRef = useRef(null);
+
+    // Fetch Active Job on mount (restores chat if page refreshed)
+    useEffect(() => {
+        const fetchUserActiveJob = async () => {
+            if (!currentUser) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/services/user/active-job`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success && data.request) {
+                    setActiveJob(data.request);
+                    setMessages(data.request.messages || []);
+                    // Don't wait for provider if we already have an accepted job
+                    setIsWaitingForProvider(false);
+                }
+            } catch (error) {
+                console.error("Error fetching user active job:", error);
+            }
+        };
+        fetchUserActiveJob();
+    }, [currentUser]);
+
+    // Make sure we join the chat room if we have an active job AND socket connects
+    useEffect(() => {
+        activeJobRef.current = activeJob;
+        if (activeJob && activeJob._id && socketRef.current && socketRef.current.connected) {
+            socketRef.current.emit('join_job_room', activeJob._id);
+            console.log(`Re-joined job room ${activeJob._id} on load/update`);
+        }
+    }, [activeJob]);
+
+    // Handle Mark Seen when opening chat
+    useEffect(() => {
+        if (isChatOpen && activeJob && socketRef.current) {
+            socketRef.current.emit('mark_messages_seen', { requestId: activeJob._id, readerId: currentUser._id || currentUser.uid });
+        }
+    }, [isChatOpen, activeJob, currentUser]);
+
+    // Scroll chat to bottom
+    useEffect(() => {
+        if (chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages, isChatOpen]);
+
+    const handleSendMessage = (e) => {
+        e.preventDefault();
+        if (!newMessage.trim() || !activeJob || activeJob.status === 'Completed') return;
+
+        socketRef.current.emit('send_job_message', {
+            requestId: activeJob._id,
+            senderId: currentUser._id || currentUser.uid,
+            senderModel: 'User',
+            text: newMessage.trim()
+        });
+        setNewMessage('');
+    };
+
+    // Initialize Socket.IO connection and listeners
+    useEffect(() => {
+        console.log("Initializing socket connection...");
+        socketRef.current = io(`${API_BASE_URL}`, {
+            withCredentials: true
+        });
+
+        const socket = socketRef.current;
+
+        const registerUser = () => {
+            const myId = currentUser?._id || currentUser?.uid;
+            if (myId) {
+                console.log("Registering user socket with ID:", myId);
+                socket.emit('register_user', myId);
+            } else {
+                console.log("Cannot register user: currentUser is missing ID", currentUser);
+            }
+        };
+
+        socket.on('connect', () => {
+            console.log("Socket connected:", socket.id);
+            registerUser();
+            if (activeJobRef.current?._id) {
+                socket.emit('join_job_room', activeJobRef.current._id);
+            }
+        });
+
+        // If already connected when this effect runs
+        if (socket.connected) {
+            console.log("Socket already connected, registering immediately:", socket.id);
+            registerUser();
+            if (activeJobRef.current?._id) {
+                socket.emit('join_job_room', activeJobRef.current._id);
+            }
+        }
+
+        // Listen for real-time location updates from any provider
+        socket.on('provider_location_updated', (data) => {
+            // console.log("Provider location update received:", data); // Spammy
+            if (!data.providerId || !data.lat || !data.lng) return;
+
+            setProviders(prevProviders => prevProviders.map(p => 
+                p.id === data.providerId ? { ...p, lat: data.lat, lng: data.lng } : p
+            ));
+
+            const markerToUpdate = markersRef.current.find(m => m._providerId === data.providerId);
+            if (markerToUpdate && window.google) {
+                const newPos = new window.google.maps.LatLng(data.lat, data.lng);
+                
+                if (selectedProviderRef.current === data.providerId && mapInstanceRef.current) {
+                    mapInstanceRef.current.panTo(newPos);
+                }
+                
+                markerToUpdate.setPosition(newPos);
+            }
+        });
+
+        // Listen for job acceptance to clear timer
+        socket.on('job_accepted', (data) => {
+            console.log("JOB ACCEPTED:", data);
+            setIsWaitingForProvider(false);
+            setRequestCountdown(0);
+            if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+            success(`Great news! ${data.providerName} has accepted your request.`);
+            
+            // Set active job locally so chat opens up
+            setActiveJob({
+                _id: data.requestId,
+                providerName: data.providerName,
+                status: 'Accepted'
+            });
+            // Also join room
+            socket.emit('join_job_room', data.requestId);
+        });
+
+        // Listen for new chat messages
+        socket.on('new_job_message', (message) => {
+            setMessages((prev) => [...prev, message]);
+            if (isChatOpen && message.senderId !== (currentUser?._id || currentUser?.uid) && activeJob) {
+                socket.emit('mark_messages_seen', { requestId: activeJob._id, readerId: currentUser._id || currentUser.uid });
+            }
+        });
+
+        // Listen for message seen updates
+        socket.on('messages_updated', (updatedMessages) => {
+            setMessages(updatedMessages);
+        });
+
+        // Listen for job rejection
+        socket.on('job_rejected', (data) => {
+            console.log("JOB REJECTED:", data);
+            setIsWaitingForProvider(false);
+            setRequestCountdown(0);
+            if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+            warn("The provider declined your request. Please select another provider.");
+            setActiveRequestProvider(null);
+        });
+
+        // Listen for job completion to show rating popup
+        socket.on('job_completed', (data) => {
+            console.log("JOB COMPLETED EVENT RECEIVED:", data);
+            setRatingPopup({
+                requestId: data.requestId,
+                providerName: data.providerName,
+                serviceType: data.serviceType
+            });
+            setRatingScore(0);
+            setRatingComment('');
+            setShowIssueReport(false);
+            setIssueReport('');
+            setRatingDone(false);
+
+            if (activeJob && activeJob._id === data.requestId) {
+                setActiveJob(prev => ({ ...prev, status: 'Completed' }));
+                setIsChatOpen(false);
+            }
+
+            // Trigger payment modal: calculate amount based on service type and provider rate
+            const calcAmount = () => {
+                const pData = providerDataRef.current;
+                if (serviceType === 'Fuel Delivery' && fuelType && quantity && pData) {
+                    const fuelPrice = (fuelType === 'Petrol' ? pData.petrolPrice : pData.dieselPrice) || 200;
+                    const fuelCost = fuelPrice * parseFloat(quantity || 0);
+                    const distanceMiles = parseFloat(pData.distance) || 0;
+                    const distanceKm = distanceMiles / 0.621371;
+                    const deliveryCharges = distanceKm * 50;
+                    return Math.round(fuelCost + deliveryCharges);
+                }
+                // For hourly services (Towing, Breakdown, Lockout)
+                if (pData?.chargesPerHour) {
+                    return pData.chargesPerHour; // show one-hour base charge; user can pay extra hours
+                }
+                return 500; // fallback base charge
+            };
+            setPaymentModal({
+                requestId: data.requestId,
+                providerName: data.providerName,
+                serviceType: data.serviceType,
+                amount: calcAmount()
+            });
+        });
+
+        socket.on('disconnect', (reason) => {
+            console.log("Socket disconnected:", reason);
+        });
+
+        socket.on('error', (err) => {
+            console.error("Socket error:", err);
+        });
+
+        return () => {
+            console.log("Cleaning up socket...");
+            socket.disconnect();
+        };
+    }, [currentUser, isChatOpen, activeJob]);
+
+    // Fetch providers from backend
+    useEffect(() => {
+        const fetchProviders = async () => {
+            if (!userLocation) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/services/nearby`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        serviceType,
+                        userLocation,
+                        searchRadius
+                    }),
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    setProviders(data.providers);
+                } else {
+                    console.error("Failed to fetch providers:", data.error);
+                }
+            } catch (error) {
+                console.error("Error fetching providers:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProviders();
+    }, [userLocation, serviceType, searchRadius]);
+
+    // Initialize Google Map
+    const initMap = useCallback(() => {
+        if (!mapRef.current || !userLocation || !window.google) return;
+
+        const center = { lat: userLocation.lat, lng: userLocation.lng };
+
+        const map = new window.google.maps.Map(mapRef.current, {
+            center: center,
+            zoom: 13,
+            styles: [
+                { elementType: "geometry", stylers: [{ color: "#1d2c4d" }] },
+                { elementType: "labels.text.stroke", stylers: [{ color: "#1a3646" }] },
+                { elementType: "labels.text.fill", stylers: [{ color: "#8ec3b9" }] },
+                { featureType: "administrative.country", elementType: "geometry.stroke", stylers: [{ color: "#4b6878" }] },
+                { featureType: "land", elementType: "geometry", stylers: [{ color: "#1d2c4d" }] },
+                { featureType: "poi", elementType: "geometry", stylers: [{ color: "#283d6a" }] },
+                { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#6f9ba5" }] },
+                { featureType: "poi.park", elementType: "geometry.fill", stylers: [{ color: "#023e58" }] },
+                { featureType: "road", elementType: "geometry", stylers: [{ color: "#304a7d" }] },
+                { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#255763" }] },
+                { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#2c6675" }] },
+                { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#255763" }] },
+                { featureType: "transit", elementType: "labels.text.fill", stylers: [{ color: "#98a5be" }] },
+                { featureType: "transit", elementType: "labels.text.stroke", stylers: [{ color: "#1d2c4d" }] },
+                { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#0e1626" }] },
+                { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#4e6d70" }] },
+            ],
+            disableDefaultUI: false,
+            zoomControl: true,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: true,
+        });
+
+        mapInstanceRef.current = map;
+        infoWindowRef.current = new window.google.maps.InfoWindow();
+
+        // User Location Marker (Blue pulsing dot)
+        new window.google.maps.Marker({
+            position: center,
+            map: map,
+            title: 'Your Location',
+            icon: {
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 12,
+                fillColor: '#4285F4',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 3,
+            },
+            zIndex: 999,
+        });
+
+        // Accuracy circle around user
+        new window.google.maps.Circle({
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.3,
+            strokeWeight: 1,
+            fillColor: '#4285F4',
+            fillOpacity: 0.1,
+            map: map,
+            center: center,
+            radius: 200,
+        });
+
+    }, [userLocation]);
+
+    // Handle auto-cancelling the request
+    const handleAutoCancel = useCallback(async () => {
+        if (!requestId) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/services/request/${requestId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'Cancelled' }),
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                warn("No response from provider. Please select another provider or try again.");
+                setIsWaitingForProvider(false);
+                setRequestCountdown(0);
+                setActiveRequestProvider(null);
+            }
+        } catch (error) {
+            console.error('Error auto-cancelling request:', error);
+        }
+    }, [requestId]);
+
+    // Timer effect for countdown
+    useEffect(() => {
+        if (isWaitingForProvider && requestCountdown > 0) {
+            countdownIntervalRef.current = setInterval(() => {
+                setRequestCountdown(prev => {
+                    if (prev <= 1) {
+                        clearInterval(countdownIntervalRef.current);
+                        handleAutoCancel();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+
+        return () => {
+            if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+        };
+    }, [isWaitingForProvider, handleAutoCancel]);
+
+    // Handle requesting a specific provider
+    const handleRequest = useCallback(async (provider) => {
+        if (!requestId) {
+            error("No active request found. Please go back and request again.");
+            return;
+        }
+
+        if (isWaitingForProvider) {
+            info("Please wait for the current provider to respond or for the timeout.");
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/services/assign`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    requestId,
+                    providerId: provider.id
+                }),
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                // Start 60s countdown
+                setIsWaitingForProvider(true);
+                setRequestCountdown(60);
+                setActiveRequestProvider(provider);
+                // Save provider details (chargesPerHour etc.) for payment calculation
+                providerDataRef.current = provider;
+                // alert(`Request sent to ${provider.name}!\nProvider has been notified.`);
+            } else {
+                error(`Error: ${data.error || 'Failed to send request'}`);
+            }
+        } catch (err) {
+            console.error('Network error during provider assignment:', err);
+            error('Network error. Please try again.');
+        }
+    }, [requestId, isWaitingForProvider]);
+
+    // Add provider markers to map
+    const addProviderMarkers = useCallback(() => {
+        if (!mapInstanceRef.current || !window.google) return;
+
+        // Clear existing provider markers
+        markersRef.current.forEach(marker => marker.setMap(null));
+        markersRef.current = [];
+
+        const bounds = new window.google.maps.LatLngBounds();
+        
+        // Include user location in bounds
+        if (userLocation) {
+            bounds.extend({ lat: userLocation.lat, lng: userLocation.lng });
+        }
+
+        providers.forEach((provider) => {
+            if (!provider.lat || !provider.lng) return;
+
+            const position = { lat: provider.lat, lng: provider.lng };
+            bounds.extend(position);
+
+            const marker = new window.google.maps.Marker({
+                position: position,
+                map: mapInstanceRef.current,
+                title: provider.name,
+                icon: {
+                    path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+                    fillColor: '#00BCD4',
+                    fillOpacity: 1,
+                    strokeColor: '#ffffff',
+                    strokeWeight: 1.5,
+                    scale: 1.8,
+                    anchor: new window.google.maps.Point(12, 22),
+                },
+                animation: window.google.maps.Animation.DROP,
+            });
+
+            // Tag marker for real-time tracking updates via socket
+            marker._providerId = provider.id;
+
+            const fuelPrice = (fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0;
+            const fuelCost = fuelPrice * parseFloat(quantity || 0);
+            const distanceInKm = parseFloat(provider.distance) || 0;
+            const deliveryCharges = distanceInKm * 50; // Rs. 50 per km
+            const totalCost = fuelCost + deliveryCharges;
+
+            const infoContent = `
+                <div style="padding: 8px; min-width: 180px; font-family: 'Inter', sans-serif;">
+                    <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: #1a1a2e;">${provider.name}</h3>
+                    <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">${provider.service}</p>
+                    <div style="display: flex; gap: 12px; font-size: 11px; color: #888;">
+                        <span>📍 ${provider.distance}</span>
+                        <span>⏱ ${provider.eta}</span>
+                    </div>
+                    <div style="margin-top: 4px; font-size: 12px; color: #f59e0b;">⭐ ${provider.rating}</div>
+                    ${serviceType === 'Fuel Delivery' && fuelType && quantity ? `
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
+                            <p style="margin: 0; font-size: 13px; font-weight: 700; color: #00BCD4;">
+                                Total: Rs. ${Math.round(totalCost)}
+                            </p>
+                            <p style="margin: 2px 0 0 0; font-size: 10px; color: #666;">Fuel: Rs. ${Math.round(fuelCost)} (@ Rs. ${fuelPrice}/L)</p>
+                            <p style="margin: 0; font-size: 10px; color: #888;">Delivery: Rs. ${Math.round(deliveryCharges)} (${distanceInKm} km @ Rs. 50/km)</p>
+                        </div>
+                    ` : ''}
+                    ${['Towing Service', 'Breakdown Repair', 'Lockout Service'].includes(serviceType) && provider.chargesPerHour ? `
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
+                            <p style="margin: 0; font-size: 13px; font-weight: 700; color: #00BCD4;">
+                                Charges: PKR ${provider.chargesPerHour}/hr
+                            </p>
+                        </div>
+                    ` : ''}
+                    <button id="iw-request-btn-${provider.id}" style="margin-top: 12px; width: 100%; padding: 6px 12px; background-color: #00BCD4; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+                        Request Service
+                    </button>
+                </div>
+            `;
+
+            marker.addListener('click', () => {
+                infoWindowRef.current.setContent(infoContent);
+                infoWindowRef.current.open(mapInstanceRef.current, marker);
+                setSelectedProvider(provider.id);
+
+                // Add event listener to the button once the InfoWindow is rendered in the DOM
+                window.google.maps.event.addListenerOnce(infoWindowRef.current, 'domready', () => {
+                    const btn = document.getElementById(`iw-request-btn-${provider.id}`);
+                    if (btn) {
+                        btn.addEventListener('click', () => {
+                            handleRequest(provider);
+                        });
+                    }
+                });
+            });
+
+            markersRef.current.push(marker);
+        });
+
+        // Fit map to show all markers
+        if (providers.length > 0 && userLocation) {
+            mapInstanceRef.current.fitBounds(bounds, { padding: 60 });
+            // Don't zoom in too much
+            const listener = window.google.maps.event.addListener(mapInstanceRef.current, 'idle', () => {
+                if (mapInstanceRef.current.getZoom() > 15) {
+                    mapInstanceRef.current.setZoom(15);
+                }
+                window.google.maps.event.removeListener(listener);
+            });
+        }
+    }, [providers, userLocation, handleRequest]);
+
+    // Wait for Google Maps to load, then initialize
+    useEffect(() => {
+        const checkGoogleMaps = () => {
+            if (window.google && window.google.maps) {
+                initMap();
+            } else {
+                setTimeout(checkGoogleMaps, 200);
+            }
+        };
+        checkGoogleMaps();
+    }, [initMap]);
+
+    // Add markers when providers change
+    useEffect(() => {
+        if (mapInstanceRef.current && providers.length > 0) {
+            addProviderMarkers();
+        }
+    }, [providers, addProviderMarkers]);
+
+    // Handle clicking a provider card in the sidebar
+    const handleProviderClick = (provider) => {
+        setSelectedProvider(provider.id);
+        if (mapInstanceRef.current && provider.lat && provider.lng) {
+            mapInstanceRef.current.panTo({ lat: provider.lat, lng: provider.lng });
+            mapInstanceRef.current.setZoom(15);
+
+            // Find and trigger click on the corresponding marker
+            const marker = markersRef.current.find(m => 
+                m.getPosition().lat() === provider.lat && m.getPosition().lng() === provider.lng
+            );
+            if (marker) {
+                window.google.maps.event.trigger(marker, 'click');
+            }
+        }
+    };
+
+    return (
+        <>
+        <div className="flex h-[calc(100vh-80px)] bg-background-light dark:bg-background-dark overflow-hidden transition-colors duration-300">
+            {/* Sidebar - Provider List */}
+            <div className="w-full md:w-[400px] flex flex-col border-r border-gray-200 dark:border-border-dark bg-surface-light dark:bg-surface-dark z-20">
+                {/* Header */}
+                <div className="p-4 border-b border-gray-200 dark:border-border-dark flex flex-col gap-3">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Nearby {serviceType} Providers</h2>
+                    
+                </div>
+
+                {/* Provider List */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+                    {loading ? (
+                         <div className="flex flex-col items-center justify-center py-16">
+                            <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
+                            <p className="text-gray-500 dark:text-text-muted text-sm">Finding nearby providers...</p>
+                         </div>
+                    ) : providers.length === 0 ? (
+                        <div className="text-center text-gray-500 dark:text-text-muted py-10">
+                            <MdMyLocation className="text-4xl mx-auto mb-3 text-gray-400" />
+                            <p>No providers found nearby for <strong>{serviceType}</strong>.</p>
+                            <p className="text-xs mt-1">Try increasing the search radius.</p>
+                        </div>
+                    ) : (
+                        providers.map((provider) => (
+                        <div 
+                            key={provider.id} 
+                            onClick={() => handleProviderClick(provider)}
+                            className={`bg-white dark:bg-[#0B1120] rounded-xl p-3 border ${selectedProvider === provider.id ? 'border-primary ring-1 ring-primary/30' : 'border-gray-200 dark:border-border-dark hover:border-primary/50'} shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer`}
+                        >
+                            <div className="flex gap-4">
+                                {/* Image */}
+                                <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-800">
+                                    <img src={provider.image} alt={provider.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                </div>
+                                
+                                {/* Content */}
+                                <div className="flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <FaStar className="text-yellow-500 text-xs" />
+                                            <span className="text-gray-900 dark:text-white text-sm font-bold">{provider.rating}</span>
+                                        </div>
+                                        <h3 className="text-gray-900 dark:text-white font-bold text-base leading-tight mb-1">{provider.name}</h3>
+                                        <p className="text-gray-500 dark:text-text-muted text-xs">{provider.service}</p>
+                                        
+                                        {serviceType === 'Fuel Delivery' && fuelType && quantity && (
+                                            (() => {
+                                                const fuelPrice = (fuelType === 'Petrol' ? provider.petrolPrice : provider.dieselPrice) || 0;
+                                                const fuelCost = fuelPrice * parseFloat(quantity || 0);
+                                                const distanceInKm = parseFloat(provider.distance) || 0;
+                                                const deliveryCharges = distanceInKm * 50;
+                                                const totalCost = fuelCost + deliveryCharges;
+                                                return (
+                                                    <div className="mt-2 text-primary font-bold text-sm">
+                                                        <div>Total: Rs. {Math.round(totalCost)}</div>
+                                                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
+                                                            Fuel: Rs. {Math.round(fuelCost)} (@ Rs. {fuelPrice}/L)
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
+                                                            Delivery: Rs. {Math.round(deliveryCharges)} ({distanceInKm} km @ Rs. 50/km)
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()
+                                        )}
+
+                                        {['Towing Service', 'Breakdown Repair', 'Lockout Service'].includes(serviceType) && provider.chargesPerHour && (
+                                            <div className="mt-2 text-primary font-bold text-sm">
+                                                Charges: PKR {provider.chargesPerHour}/hr
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    <button 
+                                        onClick={(e) => { e.stopPropagation(); handleRequest(provider); }}
+                                        className="mt-2 w-fit px-4 py-1.5 bg-gray-100 dark:bg-[#1E293B] hover:bg-primary hover:text-white text-gray-700 dark:text-white text-xs font-semibold rounded-md transition-colors duration-300 border border-gray-200 dark:border-white/10"
+                                    >
+                                        Request
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-3 flex items-center justify-between text-xs text-gray-500 dark:text-text-muted border-t border-gray-100 dark:border-white/5 pt-2">
+                                <div className="flex items-center gap-1">
+                                    <FaLocationArrow className="text-[10px]" />
+                                    {provider.distance}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <FaClock className="text-[10px]" />
+                                    {provider.eta}
+                                </div>
+                            </div>
+                        </div>
+                        ))
+                    )}
+                </div>
+
+            </div>
+
+            {/* Map Area - Google Maps */}
+            <div className="hidden md:block flex-1 relative bg-gray-900 overflow-hidden">
+                <div ref={mapRef} className="w-full h-full" />
+
+                {/* Legend Overlay */}
+                <div className="absolute bottom-6 left-4 bg-white/95 dark:bg-[#121A2A]/95 backdrop-blur-sm p-3 rounded-xl border border-gray-200 dark:border-border-dark shadow-lg">
+                    <p className="text-xs font-semibold text-gray-700 dark:text-white mb-2">Map Legend</p>
+                    <div className="flex items-center gap-2 mb-1.5">
+                        <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-white shadow-sm"></div>
+                        <span className="text-xs text-gray-600 dark:text-text-muted">Your Location</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-cyan-500 border-2 border-white shadow-sm"></div>
+                        <span className="text-xs text-gray-600 dark:text-text-muted">Service Provider</span>
+                    </div>
+                </div>
+
+                {/* Provider Count Overlay */}
+                {!loading && providers.length > 0 && (
+                    <div className="absolute top-4 left-4 bg-white/95 dark:bg-[#121A2A]/95 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-200 dark:border-border-dark shadow-lg">
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">{providers.length} provider{providers.length > 1 ? 's' : ''} found</p>
+                        <p className="text-xs text-gray-500 dark:text-text-muted">{serviceType}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        {/* ---- Job Completed Rating Popup ---- */}
+        {ratingPopup && (
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+                <div className="bg-white dark:bg-[#1a2438] rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    {ratingDone ? (
+                        <div className="flex flex-col items-center justify-center p-10 text-center">
+                            <FaCheckCircle className="text-green-500 text-6xl mb-4" />
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Thank You!</h2>
+                            <p className="text-gray-500 dark:text-gray-400 mb-6">Your feedback has been submitted.</p>
+                            <button
+                                onClick={() => {
+                                    setRatingPopup(null);
+                                    navigate('/');
+                                }}
+                                className="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-dark transition-colors"
+                            >
+                                Back to Home
+                            </button>
+                            {paymentModal && (
+                                <button
+                                    onClick={() => setPaymentModal(p => ({ ...p, _open: true }))}
+                                    className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold hover:opacity-90 transition-all shadow-lg"
+                                >
+                                    💳 Pay Now
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            {/* Header */}
+                            <div className="bg-gradient-to-r from-primary to-cyan-500 p-6 text-white relative">
+                                <button
+                                    onClick={() => setRatingPopup(null)}
+                                    className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+                                >
+                                    <FaTimes size={20} />
+                                </button>
+                                <h2 className="text-xl font-bold mb-1">Job Completed! 🎉</h2>
+                                <p className="text-white/80 text-sm">
+                                    {ratingPopup.providerName} has completed your <strong>{ratingPopup.serviceType}</strong> request.
+                                </p>
+                            </div>
+
+                            <div className="p-6 space-y-5">
+                                {/* Star Rating */}
+                                <div>
+                                    <p className="text-gray-700 dark:text-gray-300 font-semibold mb-3">Rate your experience</p>
+                                    <div className="flex justify-center gap-3">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                onClick={() => setRatingScore(star)}
+                                                onMouseEnter={() => setHoveredStar(star)}
+                                                onMouseLeave={() => setHoveredStar(0)}
+                                                className="transition-transform hover:scale-125"
+                                            >
+                                                <FaStar
+                                                    size={36}
+                                                    className={`transition-colors ${
+                                                        star <= (hoveredStar || ratingScore)
+                                                            ? 'text-yellow-400'
+                                                            : 'text-gray-300 dark:text-gray-600'
+                                                    }`}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {ratingScore > 0 && (
+                                        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                            {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent!'][ratingScore]}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Comment */}
+                                <div>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                                        Leave a comment (optional)
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={ratingComment}
+                                        onChange={(e) => setRatingComment(e.target.value)}
+                                        placeholder="Tell us about your experience..."
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl p-3 text-gray-900 dark:text-white resize-none focus:outline-none focus:border-primary transition-colors"
+                                    />
+                                </div>
+                                {/* Issue Report Section */}
+                                 <div className="border-t border-gray-100 dark:border-gray-700 pt-4">
+                                     <button
+                                         onClick={() => setShowIssueReport(!showIssueReport)}
+                                         className="text-sm text-red-500 hover:text-red-700 font-bold flex items-center gap-2 transition-colors duration-300"
+                                     >
+                                         <span className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-lg">
+                                            {showIssueReport ? '▲' : '▼'}
+                                         </span>
+                                         Report a Serious Issue
+                                     </button>
+                                     
+                                     {showIssueReport && (
+                                         <div className="mt-4 space-y-4 animate-fade-in">
+                                             {/* Reason Dropdown */}
+                                             <div>
+                                                 <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 block">
+                                                     Reason for Report
+                                                 </label>
+                                                 <select
+                                                     value={disputeReason}
+                                                     onChange={(e) => setDisputeReason(e.target.value)}
+                                                     className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-red-500 transition-colors"
+                                                 >
+                                                     <option>Late arrival</option>
+                                                     <option>Overcharging</option>
+                                                     <option>Misbehavior</option>
+                                                     <option>Fake service</option>
+                                                     <option>Safety issue</option>
+                                                     <option>Other</option>
+                                                 </select>
+                                             </div>
+
+                                             {/* Description */}
+                                             <div>
+                                                 <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 block">
+                                                     Detailed Description
+                                                 </label>
+                                                 <textarea
+                                                     rows={3}
+                                                     value={issueReport}
+                                                     onChange={(e) => setIssueReport(e.target.value)}
+                                                     placeholder="Provide details about what happened..."
+                                                     className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl p-3 text-sm text-gray-900 dark:text-white resize-none focus:outline-none focus:border-red-500 transition-colors"
+                                                 />
+                                             </div>
+
+                                             {/* Proof Upload */}
+                                             <div>
+                                                 <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 block">
+                                                     Upload Proof (Optional Image)
+                                                 </label>
+                                                 <input 
+                                                     type="file" 
+                                                     accept="image/*"
+                                                     onChange={(e) => setDisputeFile(e.target.files[0])}
+                                                     className="w-full text-xs text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 dark:file:bg-red-900/20 dark:file:text-red-400"
+                                                 />
+                                             </div>
+                                         </div>
+                                     )}
+                                 </div>                                          <button
+                                     disabled={ratingScore === 0 || ratingSubmitting}
+                                     onClick={async () => {
+                                         if (ratingScore === 0) return;
+                                         setRatingSubmitting(true);
+                                         try {
+                                             // 1. Submit Rating
+                                             await fetch(`${API_BASE_URL}/api/services/request/${ratingPopup.requestId}/rate`, {
+                                                 method: 'POST',
+                                                 headers: { 'Content-Type': 'application/json' },
+                                                 credentials: 'include',
+                                                 body: JSON.stringify({
+                                                     score: ratingScore,
+                                                     comment: ratingComment
+                                                 })
+                                             });
+
+                                             // 2. Submit Dispute if form is open and description provided
+                                             if (showIssueReport && issueReport) {
+                                                 const formData = new FormData();
+                                                 formData.append('reason', disputeReason);
+                                                 formData.append('description', issueReport);
+                                                 if (disputeFile) {
+                                                     formData.append('proofImage', disputeFile);
+                                                 }
+                                                 // Add location if available
+                                                 if (userLocation) {
+                                                     formData.append('lat', userLocation.lat);
+                                                     formData.append('lng', userLocation.lng);
+                                                 }
+
+                                                 await fetch(`${API_BASE_URL}/api/services/request/${ratingPopup.requestId}/dispute`, {
+                                                     method: 'POST',
+                                                     body: formData,
+                                                     credentials: 'include'
+                                                 });
+                                             }
+
+                                             setRatingDone(true);
+                                         } catch (err) {
+                                             console.error('Failed to submit feedback:', err);
+                                             alert('Submission failed. Please try again.');
+                                         } finally {
+                                             setRatingSubmitting(false);
+                                         }
+                                     }}
+                                     className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 ${
+                                         ratingScore === 0
+                                             ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                                             : 'bg-gradient-to-r from-primary to-cyan-500 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98]'
+                                     }`}
+                                 >
+                                     {ratingSubmitting ? (
+                                         <div className="flex items-center justify-center gap-2">
+                                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                             <span>Submitting...</span>
+                                         </div>
+                                     ) : (
+                                         'Complete Review'
+                                     )}
+                                 </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        )}
+
+        {/* ---- User Side Chat Overlay ---- */}
+        {activeJob && (
+            <>
+                {/* Floating Action Button for Chat */}
+                {!isChatOpen && activeJob.status !== 'Completed' && (
+                    <button 
+                        onClick={() => setIsChatOpen(true)}
+                        className="fixed bottom-6 right-6 p-4 rounded-full bg-primary text-white shadow-2xl hover:bg-primary-dark transition-transform hover:scale-110 z-50 flex items-center justify-center animate-bounce-short"
+                    >
+                        <FaCommentAlt size={24} />
+                        {messages.filter(m => !m.seen && m.senderId !== (currentUser?._id || currentUser?.uid)).length > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 border-2 border-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
+                                {messages.filter(m => !m.seen && m.senderId !== (currentUser?._id || currentUser?.uid)).length}
+                            </span>
+                        )}
+                    </button>
+                )}
+
+                {/* Chat Window */}
+                {isChatOpen && (
+                    <div className="fixed bottom-6 right-6 w-80 md:w-96 bg-white dark:bg-surface-dark rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col z-[9999] overflow-hidden transform transition-all animate-fade-in h-[450px]">
+                        {/* Header */}
+                        <div className="bg-primary text-white p-4 flex justify-between items-center rounded-t-xl shadow-md">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold">
+                                    {activeJob.providerName?.charAt(0) || 'P'}
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-sm leading-tight">{activeJob.providerName || 'Provider'}</h3>
+                                    <p className="text-[10px] text-primary-100">{activeJob.status === 'Completed' ? 'Chat Closed' : 'Active Job'}</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setIsChatOpen(false)} className="hover:text-gray-200 transition-colors p-2">
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        {/* Messages Area */}
+                        <div className="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-[#0B1120] space-y-3 custom-scrollbar relative">
+                            {messages.length === 0 ? (
+                                <div className="text-center text-gray-500 text-xs mt-10">Start communicating with the provider...</div>
+                            ) : (
+                                messages.map((msg, index) => {
+                                    const isMe = msg.senderId === (currentUser?._id || currentUser?.uid);
+                                    return (
+                                        <div key={index} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                                            <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-primary text-white rounded-tr-none' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm rounded-tl-none border border-gray-100 dark:border-gray-700'}`}>
+                                                {msg.text}
+                                            </div>
+                                            <div className="flex items-center gap-1 mt-1 px-1">
+                                                <span className="text-[10px] text-gray-400">
+                                                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                                {isMe && (
+                                                    <FaCheckDouble className={`text-[10px] ${msg.seen ? 'text-blue-500' : 'text-gray-400'}`} />
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            )}
+                            {activeJob.status === 'Completed' && (
+                                <div className="text-center bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs py-2 rounded-lg my-4">
+                                    Job is completed. Chat is read-only.
+                                </div>
+                            )}
+                            <div ref={chatEndRef} />
+                        </div>
+
+                        {/* Input Area */}
+                        <div className="p-3 bg-white dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700">
+                            <form onSubmit={handleSendMessage} className="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    disabled={activeJob.status === 'Completed'}
+                                    placeholder={activeJob.status === 'Completed' ? "Chat disabled" : "Type a message..."}
+                                    className="flex-1 bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-primary/50 text-gray-900 dark:text-white rounded-full px-4 py-2 text-sm outline-none transition-colors disabled:opacity-50"
+                                />
+                                <button 
+                                    type="submit" 
+                                    disabled={!newMessage.trim() || activeJob.status === 'Completed'}
+                                    className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:bg-gray-400"
+                                >
+                                    <FaPaperPlane className="text-xs ml-1" />
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
+            </>
+        )}
+
+        {/* ---- Waiting for Provider Overlay ---- */}
+        {isWaitingForProvider && (
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[10000] p-4">
+                <div className="bg-white dark:bg-[#111827] rounded-3xl w-full max-w-sm shadow-2xl border border-gray-200 dark:border-gray-800 p-8 text-center space-y-6 animate-scale-in">
+                    <div className="relative w-32 h-32 mx-auto">
+                        {/* Circular Progress */}
+                        <svg className="w-full h-full rotate-[-90deg]">
+                            <circle
+                                cx="64"
+                                cy="64"
+                                r="58"
+                                fill="transparent"
+                                stroke="currentColor"
+                                strokeWidth="8"
+                                className="text-gray-100 dark:text-gray-800"
+                            />
+                            <circle
+                                cx="64"
+                                cy="64"
+                                r="58"
+                                fill="transparent"
+                                stroke="currentColor"
+                                strokeWidth="8"
+                                strokeDasharray="364.4"
+                                strokeDashoffset={364.4 - (364.4 * requestCountdown) / 60}
+                                strokeLinecap="round"
+                                className="text-primary transition-all duration-1000 ease-linear"
+                            />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-4xl font-bold text-gray-900 dark:text-white">{requestCountdown}</span>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Waiting for {activeRequestProvider?.name}</h3>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                            The provider has 60 seconds to accept your <strong>{serviceType}</strong> request.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <div className="flex items-center justify-center gap-2 text-primary font-medium text-sm animate-pulse">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                            Connecting to provider...
+                        </div>
+                        <button
+                            onClick={handleAutoCancel}
+                            className="text-gray-500 hover:text-red-500 text-sm font-semibold transition-colors pt-2"
+                        >
+                            Cancel Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        {/* ─── Payment Modal ─── */}
+        {paymentModal && (
+            <PaymentModal
+                isOpen={true}
+                onClose={() => setPaymentModal(null)}
+                serviceRequestId={paymentModal.requestId}
+                serviceType={paymentModal.serviceType}
+                providerName={paymentModal.providerName}
+                amount={paymentModal.amount}
+                currentUser={currentUser}
+            />
+        )}
+        </>
+    );
+};
+
+export default NearbyProviders;
