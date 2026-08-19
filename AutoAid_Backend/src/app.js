@@ -166,8 +166,8 @@ app.use('/api/recommend', require('./routes/recommenderRoutes'));
 app.use('/api/nha', require('./routes/nhaRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 
-app.get('/', (req, res) => {
-  res.send('AutoAid Backend is running');
+app.get(['/', '/health', '/api/health'], (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'AutoAid Backend is running' });
 });
 
 const PORT = process.env.PORT || 3000;

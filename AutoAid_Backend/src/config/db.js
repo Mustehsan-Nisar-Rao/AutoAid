@@ -5,7 +5,8 @@ dotenv.config();
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://autoaidDb:8765@1234@autoaid-database-cluste.7c93xlw.mongodb.net/');
+    const mongoUri = process.env.MONGO_URI || 'mongodb+srv://autoaidDb:8765%401234@autoaid-database-cluste.7c93xlw.mongodb.net/';
+    const conn = await mongoose.connect(mongoUri);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
 
