@@ -9,12 +9,13 @@ import { API_BASE_URL } from '../utils/api';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { fetchUserProfile } = useAuth();
-    const { error } = useNotification();
+    const { setCurrentUser } = useAuth();
+    const { error, success } = useNotification();
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -41,6 +42,10 @@ const Login = () => {
 
         if (!isValid) return;
 
+        setIsSubmitting(true);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout for Render cold-start
+
         try {
             // Send email + password directly to backend
             const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -50,31 +55,39 @@ const Login = () => {
                 },
                 credentials: 'include',
                 body: JSON.stringify({ email, password }),
+                signal: controller.signal
             });
 
+            clearTimeout(timeoutId);
             const data = await response.json();
 
             if (response.ok) {
                 // Login Success
                 console.log('Login Successful:', data.user);
-                
-                // Refresh context to ensure latest user data (including role)
-                await fetchUserProfile();
+                setCurrentUser(data.user);
+                success('Logged in successfully!');
 
-                // Redirect based on role
+                // Instant redirect based on role
                 if (data.user.role === 'admin' || data.user.role === 'superadmin') {
                     navigate('/admin');
                 } else if (data.user.role === 'provider') {
                     navigate('/provider');
                 } else {
                     navigate('/');
-                } 
+                }
             } else {
-                error(data.error);
+                error(data.error || 'Invalid credentials');
             }
         } catch (err) {
+            clearTimeout(timeoutId);
             console.error('Login Error:', err);
-            error('Login failed: ' + err.message);
+            if (err.name === 'AbortError') {
+                error('Server is starting up. Please click Login again in a few seconds.');
+            } else {
+                error('Login failed: ' + (err.message || 'Network error'));
+            }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -163,10 +176,21 @@ const Login = () => {
                                 </div>
                                 <div>
                                     <button
-                                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-background-dark bg-primary hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-dark focus:ring-primary transition-colors duration-200"
+                                        disabled={isSubmitting}
+                                        className={`w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-background-dark bg-primary hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-dark focus:ring-primary transition-all duration-200 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                                         type="submit"
                                     >
-                                        Login
+                                        {isSubmitting ? (
+                                            <span className="flex items-center gap-2">
+                                                <svg className="animate-spin h-5 w-5 text-background-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Signing in...
+                                            </span>
+                                        ) : (
+                                            'Login'
+                                        )}
                                     </button>
                                 </div>
                             </form>
