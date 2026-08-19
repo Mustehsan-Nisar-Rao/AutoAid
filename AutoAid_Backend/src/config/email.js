@@ -57,9 +57,10 @@ const createGmailTransporter = (port, secure) => {
   });
 };
 
-const sendEmail = async (to, subject, html) => {
+const sendEmail = async (to, subject, html, text = '') => {
   const senderName = 'AutoAid';
   const rawEmail = getCleanEnv('EMAIL_USER', 'umar68408@gmail.com');
+  const plainText = text || html.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
 
   // Method 1: Resend HTTP API (Recommended for Render free tier)
   if (process.env.RESEND_API_KEY) {
@@ -71,7 +72,8 @@ const sendEmail = async (to, subject, html) => {
           from: `${senderName} <onboarding@resend.dev>`,
           to: [to],
           subject: subject,
-          html: html
+          html: html,
+          text: plainText
         }
       );
       if (!res.ok) {
@@ -94,7 +96,8 @@ const sendEmail = async (to, subject, html) => {
           sender: { name: senderName, email: rawEmail },
           to: [{ email: to }],
           subject: subject,
-          htmlContent: html
+          htmlContent: html,
+          textContent: plainText
         }
       );
       if (!res.ok) {
@@ -112,7 +115,14 @@ const sendEmail = async (to, subject, html) => {
     from: `"${senderName}" <${rawEmail}>`,
     to: to,
     subject: subject,
+    text: plainText,
     html: html,
+    headers: {
+      'X-Priority': '1 (Highest)',
+      'X-MSMail-Priority': 'High',
+      'Importance': 'High',
+      'Auto-Submitted': 'auto-generated'
+    }
   };
 
   try {
@@ -137,8 +147,8 @@ const sendEmail = async (to, subject, html) => {
 };
 
 const sendOtpEmail = async (email, otp) => {
-    const subject = 'Your AutoAid Verification Code';
-    const html = `
+  const subject = 'Your AutoAid Verification Code';
+  const html = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -229,7 +239,8 @@ const sendOtpEmail = async (email, otp) => {
       </body>
       </html>
     `;
-    await sendEmail(email, subject, html);
+  const text = `Your AutoAid Verification Code is: ${otp}\n\nThis verification code will expire in 5 minutes.\n\nIf you did not request this verification code, please ignore this email.`;
+  await sendEmail(email, subject, html, text);
 };
 
 module.exports = { sendOtpEmail, sendEmail };
