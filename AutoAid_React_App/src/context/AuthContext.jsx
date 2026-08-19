@@ -12,16 +12,11 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     const fetchUserProfile = async () => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second max timeout
-
         try {
             const response = await fetch(`${API_BASE_URL}/api/auth/check`, {
                 method: 'GET',
                 credentials: 'include',
-                signal: controller.signal
             });
-            clearTimeout(timeoutId);
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
@@ -36,7 +31,6 @@ export const AuthProvider = ({ children }) => {
             console.error("Failed to fetch user profile", error);
             setCurrentUser(null);
         } finally {
-            clearTimeout(timeoutId);
             setLoading(false);
         }
     };

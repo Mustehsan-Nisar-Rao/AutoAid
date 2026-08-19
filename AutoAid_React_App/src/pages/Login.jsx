@@ -43,8 +43,6 @@ const Login = () => {
         if (!isValid) return;
 
         setIsSubmitting(true);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout for Render cold-start
 
         try {
             // Send email + password directly to backend
@@ -55,10 +53,8 @@ const Login = () => {
                 },
                 credentials: 'include',
                 body: JSON.stringify({ email, password }),
-                signal: controller.signal
             });
 
-            clearTimeout(timeoutId);
             const data = await response.json();
 
             if (response.ok) {
@@ -79,13 +75,8 @@ const Login = () => {
                 error(data.error || 'Invalid credentials');
             }
         } catch (err) {
-            clearTimeout(timeoutId);
             console.error('Login Error:', err);
-            if (err.name === 'AbortError') {
-                error('Server is starting up. Please click Login again in a few seconds.');
-            } else {
-                error('Login failed: ' + (err.message || 'Network error'));
-            }
+            error('Login failed: ' + (err.message || 'Network error'));
         } finally {
             setIsSubmitting(false);
         }
