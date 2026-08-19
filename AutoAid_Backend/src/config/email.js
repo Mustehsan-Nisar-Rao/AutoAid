@@ -58,91 +58,28 @@ const createGmailTransporter = (port, secure) => {
 };
 
 const sendEmail = async (to, subject, html, text = '') => {
-  const senderName = 'AutoAid';
-  const rawEmail = getCleanEnv('EMAIL_USER', 'umar68408@gmail.com');
   const plainText = text || html.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
 
-  // Method 1: Resend HTTP API (Recommended for Render free tier)
-  if (process.env.RESEND_API_KEY) {
-    try {
-      const res = await postRequest(
-        'https://api.resend.com/emails',
-        { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` },
-        {
-          from: `${senderName} <onboarding@resend.dev>`,
-          to: [to],
-          subject: subject,
-          html: html,
-          text: plainText
-        }
-      );
-      if (!res.ok) {
-        throw new Error(`Resend API failed with status ${res.status}: ${res.body}`);
-      }
-      console.log(`Email sent to ${to} via Resend HTTP API`);
-      return;
-    } catch (error) {
-      console.error('Resend HTTP API failed:', error);
-    }
-  }
-
-  // Method 2: Brevo HTTP API (Alternative for Render free tier)
-  if (process.env.BREVO_API_KEY) {
-    try {
-      const res = await postRequest(
-        'https://api.brevo.com/v3/smtp/email',
-        { 'api-key': process.env.BREVO_API_KEY },
-        {
-          sender: { name: senderName, email: rawEmail },
-          to: [{ email: to }],
-          subject: subject,
-          htmlContent: html,
-          textContent: plainText
-        }
-      );
-      if (!res.ok) {
-        throw new Error(`Brevo API failed with status ${res.status}: ${res.body}`);
-      }
-      console.log(`Email sent to ${to} via Brevo HTTP API`);
-      return;
-    } catch (error) {
-      console.error('Brevo HTTP API failed:', error);
-    }
-  }
-
-  // Method 3: Primary SMTP (Gmail Port 465)
-  const mailOptions = {
-    from: `"${senderName}" <${rawEmail}>`,
-    to: to,
-    subject: subject,
-    text: plainText,
-    html: html,
-    headers: {
-      'X-Priority': '1 (Highest)',
-      'X-MSMail-Priority': 'High',
-      'Importance': 'High',
-      'Auto-Submitted': 'auto-generated'
-    }
-  };
-
   try {
-    const primaryTransporter = createGmailTransporter(465, true);
-    await primaryTransporter.sendMail(mailOptions);
-    console.log(`Email sent to ${to} via Gmail SMTP (Port 465)`);
-    return;
-  } catch (err465) {
-    console.warn(`Gmail SMTP Port 465 failed: ${err465.message}. Trying Port 587...`);
-  }
+    // We send an HTTP POST request to our Vercel Serverless API
+    // Vercel does not block SMTP ports, so it will connect to Gmail SMTP perfectly.
+    const vercelApiUrl = process.env.VERCEL_EMAIL_API || 'https://autoaid-react-app.vercel.app/api/sendEmail';
+    const secretKey = 'autoaid-secret-key-123'; // Must match the secret in api/sendEmail.js
 
-  // Method 4: Fallback SMTP (Gmail Port 587)
-  try {
-    const secondaryTransporter = createGmailTransporter(587, false);
-    await secondaryTransporter.sendMail(mailOptions);
-    console.log(`Email sent to ${to} via Gmail SMTP (Port 587)`);
-    return;
-  } catch (err587) {
-    console.error(`Gmail SMTP Port 587 failed: ${err587.message}`);
-    throw new Error(`Failed to send email via SMTP: ${err587.message}`);
+    const res = await postRequest(
+      vercelApiUrl,
+      { 'Authorization': `Bearer ${secretKey}` },
+      { to, subject, html, text: plainText }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Vercel Email API failed: ${res.body}`);
+    }
+    
+    console.log(`Email sent to ${to} successfully via Vercel Serverless SMTP!`);
+  } catch (error) {
+    console.error('Failed to send email via Vercel API:', error.message);
+    throw new Error('Failed to send email: ' + error.message);
   }
 };
 
