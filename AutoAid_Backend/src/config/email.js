@@ -36,20 +36,30 @@ const postRequest = (url, headers, body) => {
   });
 };
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  family: 4, // Force IPv4 to avoid IPv6 connection timeouts on Render
-});
+const getCleanEnv = (key, fallback = '') => {
+  const val = process.env[key] || fallback;
+  return val.trim().replace(/^["']|["']$/g, '');
+};
+
+const createGmailTransporter = (port, secure) => {
+  const user = getCleanEnv('EMAIL_USER');
+  const pass = getCleanEnv('EMAIL_PASS');
+  return nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: port,
+    secure: secure,
+    auth: { user, pass },
+    tls: { rejectUnauthorized: false },
+    connectionTimeout: 8000,
+    socketTimeout: 8000,
+    family: 4,
+  });
+};
 
 const sendEmail = async (to, subject, html) => {
   const senderName = 'AutoAid';
-  const senderAddress = process.env.EMAIL_USER || 'no-reply@autoaid.com';
+  const rawEmail = getCleanEnv('EMAIL_USER', 'umar68408@gmail.com');
 
   // Method 1: Resend HTTP API (Recommended for Render free tier)
   if (process.env.RESEND_API_KEY) {
@@ -71,7 +81,6 @@ const sendEmail = async (to, subject, html) => {
       return;
     } catch (error) {
       console.error('Resend HTTP API failed:', error);
-      throw error;
     }
   }
 
@@ -82,7 +91,7 @@ const sendEmail = async (to, subject, html) => {
         'https://api.brevo.com/v3/smtp/email',
         { 'api-key': process.env.BREVO_API_KEY },
         {
-          sender: { name: senderName, email: senderAddress },
+          sender: { name: senderName, email: rawEmail },
           to: [{ email: to }],
           subject: subject,
           htmlContent: html
@@ -95,20 +104,36 @@ const sendEmail = async (to, subject, html) => {
       return;
     } catch (error) {
       console.error('Brevo HTTP API failed:', error);
-      throw error;
     }
   }
 
-  // Fallback: SMTP (For local dev and standard Node deployments)
+  // Method 3: Primary SMTP (Gmail Port 465)
   const mailOptions = {
-    from: `"${senderName}" <${senderAddress}>`,
+    from: `"${senderName}" <${rawEmail}>`,
     to: to,
     subject: subject,
     html: html,
   };
 
-  await transporter.sendMail(mailOptions);
-  console.log(`Email sent to ${to} via SMTP`);
+  try {
+    const primaryTransporter = createGmailTransporter(465, true);
+    await primaryTransporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to} via Gmail SMTP (Port 465)`);
+    return;
+  } catch (err465) {
+    console.warn(`Gmail SMTP Port 465 failed: ${err465.message}. Trying Port 587...`);
+  }
+
+  // Method 4: Fallback SMTP (Gmail Port 587)
+  try {
+    const secondaryTransporter = createGmailTransporter(587, false);
+    await secondaryTransporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to} via Gmail SMTP (Port 587)`);
+    return;
+  } catch (err587) {
+    console.error(`Gmail SMTP Port 587 failed: ${err587.message}`);
+    throw new Error(`Failed to send email via SMTP: ${err587.message}`);
+  }
 };
 
 const sendOtpEmail = async (email, otp) => {
