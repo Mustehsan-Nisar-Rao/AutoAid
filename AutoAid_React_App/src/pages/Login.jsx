@@ -44,7 +44,7 @@ const Login = () => {
 
         setIsSubmitting(true);
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout for Render cold-start
+        const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout for Render cold-start
 
         try {
             // Send email + password directly to backend
