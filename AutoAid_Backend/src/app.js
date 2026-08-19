@@ -10,9 +10,6 @@ const ServiceRequest = require('./models/ServiceRequest');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 const app = express();
 const server = http.createServer(app);
 
@@ -174,4 +171,5 @@ const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT} bound to 0.0.0.0`);
+  connectDB().catch(err => console.error('Background DB Connection Error:', err.message));
 });
