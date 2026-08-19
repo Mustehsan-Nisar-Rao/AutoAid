@@ -219,7 +219,7 @@ const Navbar = () => {
                                 <NavLink 
                                     key={item.name} 
                                     to={item.path} 
-                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    onClick={() => { setIsMobileMenuOpen(false); setIsServicesOpen(false); }}
                                     className={({ isActive }) => 
                                         `block px-3 py-2 rounded-md text-sm font-medium ${
                                             isActive ? 'text-primary dark:text-white bg-primary/10 dark:bg-white/10' : 'text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
