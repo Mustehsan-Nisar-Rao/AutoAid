@@ -186,9 +186,10 @@ const Navbar = () => {
                     <NavLink 
                         to="/" 
                         end
+                        onClick={() => setIsMobileMenuOpen(false)}
                         className={({ isActive }) => 
                             `block px-3 py-2 rounded-md text-base font-medium ${
-                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
                             }`
                         }
                     >
@@ -200,7 +201,7 @@ const Navbar = () => {
                         <button
                             onClick={() => setIsServicesOpen(!isServicesOpen)}
                             className={`flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium ${
-                                isServicesOpen ? 'text-primary dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                                isServicesOpen ? 'text-primary dark:text-white' : 'text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
                             }`}
                         >
                             Services
@@ -218,9 +219,10 @@ const Navbar = () => {
                                 <NavLink 
                                     key={item.name} 
                                     to={item.path} 
+                                    onClick={() => setIsMobileMenuOpen(false)}
                                     className={({ isActive }) => 
                                         `block px-3 py-2 rounded-md text-sm font-medium ${
-                                            isActive ? 'text-primary dark:text-white bg-primary/10 dark:bg-white/10' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                                            isActive ? 'text-primary dark:text-white bg-primary/10 dark:bg-white/10' : 'text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
                                         }`
                                     }
                                 >
@@ -230,22 +232,12 @@ const Navbar = () => {
                         </div>
                     </div>
 
-
-                    {/* <NavLink 
-                        to="/careers" 
-                        className={({ isActive }) => 
-                            `block px-3 py-2 rounded-md text-base font-medium ${
-                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
-                            }`
-                        }
-                    >
-                        Careers
-                    </NavLink> */}
                     <NavLink 
                         to="/about" 
+                        onClick={() => setIsMobileMenuOpen(false)}
                         className={({ isActive }) => 
                             `block px-3 py-2 rounded-md text-base font-medium ${
-                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
                             }`
                         }
                     >
@@ -253,9 +245,10 @@ const Navbar = () => {
                     </NavLink>
                     <NavLink 
                         to="/contact" 
+                        onClick={() => setIsMobileMenuOpen(false)}
                         className={({ isActive }) => 
                             `block px-3 py-2 rounded-md text-base font-medium ${
-                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                                isActive ? 'text-primary dark:text-white bg-primary/10' : 'text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
                             }`
                         }
                     >
@@ -265,7 +258,7 @@ const Navbar = () => {
                     <div className="pt-4 flex flex-col gap-3">
                         <button
                             onClick={toggleTheme}
-                            className="flex items-center gap-3 px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 w-full text-left"
+                            className="flex items-center gap-3 px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 w-full text-left"
                         >
                             {theme === 'dark' ? <><FaSun /> Light Mode</> : <><FaMoon /> Dark Mode</>}
                         </button>
@@ -275,20 +268,20 @@ const Navbar = () => {
                                     <FaUserCircle className="text-2xl" />
                                     <span className="text-sm font-medium">{currentUser.email}</span>
                                 </div>
-                                <Link to="/profile" className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5">Profile</Link>
+                                <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5">Profile</Link>
                                 <button
-                                    onClick={handleLogout}
-                                    className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:text-red-400 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-2"
+                                    onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+                                    className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-500 hover:text-red-600 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-2"
                                 >
                                     <FaSignOutAlt /> Logout
                                 </button>
                             </>
                         ) : (
                             <>
-                                <Link to="/login" className="w-full flex items-center justify-center rounded-full h-10 px-5 text-gray-700 dark:text-white text-sm font-bold border border-gray-300 dark:border-white/20 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full flex items-center justify-center rounded-full h-10 px-5 text-gray-800 dark:text-white text-sm font-bold border border-gray-400 dark:border-white/20 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                                     Login
                                 </Link>
-                                <Link to="/signup" className="w-full flex items-center justify-center rounded-full h-10 px-5 bg-gradient-to-r from-primary to-blue-500 text-white dark:text-background-dark text-sm font-bold hover:shadow-button-glow transition-all">
+                                <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="w-full flex items-center justify-center rounded-full h-10 px-5 bg-gradient-to-r from-primary to-blue-500 text-white dark:text-background-dark text-sm font-bold hover:shadow-button-glow transition-all">
                                     Sign Up
                                 </Link>
                             </>
