@@ -1,5 +1,6 @@
 // Central API base URL configuration
-// In development: uses localhost
-// In production: uses the VITE_API_URL env variable set on Vercel
-
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// In development: defaults to localhost
+// In production: uses VITE_API_URL or live Render backend URL
+export const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://autoaid-backend.onrender.com' : 'http://localhost:3000');
